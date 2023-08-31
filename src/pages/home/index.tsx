@@ -3,7 +3,7 @@ type ComponentProps = {
 }
 const Home = ({data}: ComponentProps) => {
   const checkTypeScript: boolean = true
-  return <div className="w-12 h-12 bg-black">Test</div>
+  return <div className="w-full h-full bg text">Test</div>
 }
 
 export async function getServerSideProps() {
