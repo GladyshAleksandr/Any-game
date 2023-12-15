@@ -1,9 +1,14 @@
 import '../styles/globals.css'
+import Layout from '@/lib/ui/layout/Layout'
 import AppProps from 'next/app'
 
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
-    return <div className="text-[#ededed]"><Component {...pageProps} /></div>
+    return <div className="text-[#ededed]">
+        <Layout>
+            <Component {...pageProps} />
+            </Layout>
+            </div>
 }
 
 export default MyApp
