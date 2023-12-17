@@ -11,6 +11,9 @@ const config: Config = {
      },
     backgroundColor: {
       DEFAULT: 'black'
+    },
+    fontFamily: {
+      archivo: ['Archivo Black', 'sans-serif'],
     }
     },
   },
