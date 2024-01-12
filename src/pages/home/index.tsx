@@ -4,7 +4,8 @@ type ComponentProps = {
   data: null
 }
 const Home = ({ data }: ComponentProps) => {
-  const checkTypeScript: boolean = true
+  //TODO const games
+
   return (
     <div className="flex justify-center">
       <div className="flex flex-row justify-between w-1/2 rounded-md bg-white max-w-full px-4 py-3">
@@ -18,6 +19,7 @@ const Home = ({ data }: ComponentProps) => {
         </div>
         <button className="bg-red-500 px-4 py-2 rounded-md">Filter</button>
       </div>
+      <div></div>
     </div>
   )
 }

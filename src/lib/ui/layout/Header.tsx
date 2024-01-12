@@ -8,6 +8,7 @@ const Header = () => {
       <AnyGameLogo />
       <div className="flex flex-row items-center space-x-4">
         <div>Rate Game</div>
+        <div>Future Updates</div>
         <Notification />
         <Profile />
       </div>
