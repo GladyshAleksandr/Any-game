@@ -1,15 +1,13 @@
 import Profile from '@icons/Profile.svg'
 import Notification from '@icons/Notification.svg'
+import AnyGameLogo from './components/AnyGameLogo'
 
 const Header = () => {
   return (
-    <div className="flex flex-row justify-between items-center bg-red-300">
-      <div className="font-archivo text-2xl leading-6">
-        <p>Any</p>
-        <p>Game</p>
-      </div>
-      <div className="flex flex-row space-x-4 bg-blue-300">
-        <div></div>
+    <div className="flex flex-row justify-between items-center mb-10">
+      <AnyGameLogo />
+      <div className="flex flex-row items-center space-x-4">
+        <div>Rate Game</div>
         <Notification />
         <Profile />
       </div>
