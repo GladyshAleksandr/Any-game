@@ -1,7 +1,5 @@
 # .env file
 .env
-.env.test
-.env.development
 
 # dependencies
 /node_modules

@@ -1,11 +1,27 @@
+import axios from 'axios'
 import Search from '@icons/Search.svg'
+import { useEffect } from 'react'
+
+type Results = {
+  id: number
+  name: string
+  background_image: string
+  rating_top: number
+  parent_platforms: {
+    platform: {
+      name: string
+    }
+  }[]
+  tags: {
+    name: string
+  }[]
+}
 
 type ComponentProps = {
-  data: null
+  allGames: Array<Results>
 }
-const Home = ({ data }: ComponentProps) => {
-  //TODO const games
-
+const Home = ({ allGames }: ComponentProps) => {
+  console.log('allGames', allGames)
   return (
     <div className="flex justify-center">
       <div className="flex flex-row justify-between w-1/2 rounded-md bg-white max-w-full px-4 py-3">
@@ -25,9 +41,15 @@ const Home = ({ data }: ComponentProps) => {
 }
 
 export async function getServerSideProps() {
+  const allGamesReq = await axios.get(
+    `https://api.rawg.io/api/games?key=${process.env.RAWG_API_KEY}`
+  )
+
+  const allGames = allGamesReq.data.results
+
   return {
     props: {
-      data: null
+      allGames
     }
   }
 }
