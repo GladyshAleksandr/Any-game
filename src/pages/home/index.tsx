@@ -2,23 +2,8 @@ import axios from 'axios'
 import Search from '@icons/Search.svg'
 import { useEffect } from 'react'
 
-type Results = {
-  id: number
-  name: string
-  background_image: string
-  rating_top: number
-  parent_platforms: {
-    platform: {
-      name: string
-    }
-  }[]
-  tags: {
-    name: string
-  }[]
-}
-
 type ComponentProps = {
-  allGames: Array<Results>
+  allGames: Array<any>
 }
 const Home = ({ allGames }: ComponentProps) => {
   console.log('allGames', allGames)
