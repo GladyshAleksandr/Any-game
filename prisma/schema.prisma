@@ -48,7 +48,8 @@ model Game {
   backgroundImage     String
   screenshots         String[]
   metacritic          Int
-  esrbRating          EsrbRating[]
+  esrbRatingId        Int?
+  esrbRating          EsrbRating? @relation(fields: [esrbRatingId], references: [id])
   parentPlatforms     ParentPlatform[]
   genres              Genre[]
   tags                Tag[]           

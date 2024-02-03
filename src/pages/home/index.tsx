@@ -1,11 +1,13 @@
 import axios from 'axios'
 import Search from '@icons/Search.svg'
 import { useEffect } from 'react'
+import create from '@/lib/ui/api-client/generate/generate'
 
 type ComponentProps = {
   allGames: Array<any>
 }
 const Home = ({ allGames }: ComponentProps) => {
+  const genRes = create({})
   console.log('allGames', allGames)
   return (
     <div className="flex justify-center">
