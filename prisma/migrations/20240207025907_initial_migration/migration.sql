@@ -44,14 +44,9 @@ CREATE TABLE "Game" (
     "backgroundImage" TEXT NOT NULL,
     "screenshots" TEXT[],
     "metacritic" INTEGER NOT NULL,
+    "esrbRatingId" INTEGER,
 
     CONSTRAINT "Game_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "_EsrbRatingToGame" (
-    "A" INTEGER NOT NULL,
-    "B" INTEGER NOT NULL
 );
 
 -- CreateTable
@@ -88,12 +83,6 @@ CREATE UNIQUE INDEX "Tag_slug_key" ON "Tag"("slug");
 CREATE UNIQUE INDEX "Game_slug_key" ON "Game"("slug");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "_EsrbRatingToGame_AB_unique" ON "_EsrbRatingToGame"("A", "B");
-
--- CreateIndex
-CREATE INDEX "_EsrbRatingToGame_B_index" ON "_EsrbRatingToGame"("B");
-
--- CreateIndex
 CREATE UNIQUE INDEX "_GameToParentPlatform_AB_unique" ON "_GameToParentPlatform"("A", "B");
 
 -- CreateIndex
@@ -112,10 +101,7 @@ CREATE UNIQUE INDEX "_GameToTag_AB_unique" ON "_GameToTag"("A", "B");
 CREATE INDEX "_GameToTag_B_index" ON "_GameToTag"("B");
 
 -- AddForeignKey
-ALTER TABLE "_EsrbRatingToGame" ADD CONSTRAINT "_EsrbRatingToGame_A_fkey" FOREIGN KEY ("A") REFERENCES "EsrbRating"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "_EsrbRatingToGame" ADD CONSTRAINT "_EsrbRatingToGame_B_fkey" FOREIGN KEY ("B") REFERENCES "Game"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "Game" ADD CONSTRAINT "Game_esrbRatingId_fkey" FOREIGN KEY ("esrbRatingId") REFERENCES "EsrbRating"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "_GameToParentPlatform" ADD CONSTRAINT "_GameToParentPlatform_A_fkey" FOREIGN KEY ("A") REFERENCES "Game"("id") ON DELETE CASCADE ON UPDATE CASCADE;

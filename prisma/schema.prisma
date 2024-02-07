@@ -21,14 +21,14 @@ model EsrbRating {
 model ParentPlatform {
   id     Int     @id @default(autoincrement())
   name   String
-  slug   String   @unique
-  games  Game[]
+  slug   String  @unique
+  games  Game[] 
 }
 
 model Genre {
   id                  Int     @id @default(autoincrement())
   name                String
-  slug                String   @unique
+  slug                String  @unique
   backgroundImage     String
   games               Game[]
 }
