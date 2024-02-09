@@ -1,13 +1,9 @@
-import axios from 'axios'
 import Search from '@icons/Search.svg'
-import { useEffect } from 'react'
-import create from '@/lib/ui/api-client/generate/generate'
 
 type ComponentProps = {
   allGames: Array<any>
 }
 const Home = ({ allGames }: ComponentProps) => {
-  const genRes = create({})
   console.log('allGames', allGames)
   return (
     <div className="flex justify-center">
@@ -28,11 +24,7 @@ const Home = ({ allGames }: ComponentProps) => {
 }
 
 export async function getServerSideProps() {
-  const allGamesReq = await axios.get(
-    `https://api.rawg.io/api/games?key=${process.env.RAWG_API_KEY}`
-  )
-
-  const allGames = allGamesReq.data.results
+  const allGames = [] // TODO
 
   return {
     props: {

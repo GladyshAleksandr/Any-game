@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "format": "prettier --check --ignore-path .gitignore .",
-    "format:fix": "prettier --write --ignore-path .gitignore ."
+    "format:fix": "prettier --write --ignore-path .gitignore .",
+    "seed:games": "CLI_START=true tsx prisma/seeds/games.ts"
   },
   "dependencies": {
     "@prisma/client": "^5.8.1",
@@ -27,6 +28,7 @@
   "devDependencies": {
     "@svgr/webpack": "^8.1.0",
     "prettier": "^3.1.1",
-    "prisma": "^5.9.1"
+    "prisma": "^5.9.1",
+    "tsx": "^4.7.0"
   }
 }

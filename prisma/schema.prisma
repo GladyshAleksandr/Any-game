@@ -47,7 +47,7 @@ model Game {
   slug                String   @unique
   backgroundImage     String
   screenshots         String[]
-  metacritic          Int
+  metacritic          Int?
   esrbRatingId        Int?
   esrbRating          EsrbRating? @relation(fields: [esrbRatingId], references: [id])
   parentPlatforms     ParentPlatform[]
