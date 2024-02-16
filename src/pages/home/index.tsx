@@ -58,9 +58,16 @@ const getPlatformImg = (slug: string) => {
   }
 }
 
+const getColorFromRating = (rating: number) => {
+  if (rating <= 50) return '#808000' // olive
+  if (rating <= 80) return '#cccccc' // silver
+  if (rating <= 90) return '#ffd900' // gold
+  if (rating <= 100) return '#03fff7' //Diamond #b9f2ff
+}
+
 const Home = ({ games }: ComponentProps) => {
   const [page, setPage] = useState<number>(1)
-  console.log('games', games)
+
   return (
     <div>
       <div className="flex justify-center">
@@ -78,25 +85,38 @@ const Home = ({ games }: ComponentProps) => {
       </div>
       <div className="grid grid-cols-5 gap-4 mt-10">
         {games.map((game) => (
-          <div className="bg-[#1b1b1b] w-30 h-64 rounded-2xl">
+          <div key={game.id} className="bg-[#1b1b1b] w-30 h-64 rounded-2xl">
             <img
               className="object-cover w-full h-40 rounded-2xl"
               src={game.backgroundImage} // Path to your image in the public directory
               alt="Description of the image"
             />
             <div className="px-3 mt-2">
-              <div className="flex flex-row justify-between items-center">
-                <div className="flex space-x-1 items-center">
+              <div className="flex flex-row justify-between">
+                <div className="flex space-x-1">
                   {game.parentPlatforms.map((platform) => (
                     <Image
+                      key={platform.id}
                       alt={game.name}
                       src={getPlatformImg(platform.slug)}
-                      width={18}
                       height={18}
+                      width={18}
                     />
                   ))}
                 </div>
-                <p>{game.metacritic}</p>
+                {game.metacritic ? (
+                  <p
+                    style={{
+                      color: getColorFromRating(game.metacritic),
+                      borderColor: getColorFromRating(game.metacritic)
+                    }}
+                    className="border-2 rounded-md px-2 "
+                  >
+                    {game.metacritic}
+                  </p>
+                ) : (
+                  <p>N/A</p>
+                )}
               </div>
             </div>
           </div>

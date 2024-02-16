@@ -44,7 +44,7 @@ const Footer = () => {
         </div>
         <div className="flex space-x-2">
           {socialMedia.map((el) => (
-            <Link href={el.url}>
+            <Link key={el.name} href={el.url}>
               <Image alt={el.name} src={el.icon} width={32} height={32} />
             </Link>
           ))}
