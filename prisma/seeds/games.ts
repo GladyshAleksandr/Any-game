@@ -1,7 +1,5 @@
 import { fetchAllGames } from '@/lib/backend/utils/fetchAllgames'
-import { PrismaClient } from '@prisma/client'
-
-const prisma = new PrismaClient()
+import prisma from '@/lib/prisma'
 
 const seedGames = async () => {
   try {

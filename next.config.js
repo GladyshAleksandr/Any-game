@@ -8,6 +8,9 @@ const nextConfig = {
     })
 
     return config
+  },
+  images: {
+    domains: ['media.rawg.io'] // Add your image domain here
   }
 }
 

@@ -18,6 +18,7 @@
     "autoprefixer": "10.4.15",
     "axios": "^1.6.5",
     "next": "13.4.19",
+    "nuka-carousel": "^7.0.0",
     "object.groupby": "^1.0.1",
     "postcss": "8.4.29",
     "react": "18.2.0",
