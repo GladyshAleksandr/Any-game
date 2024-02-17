@@ -27,15 +27,14 @@ const GameCards = ({ games }: GameCardType) => {
             alt="Description of the image"
           />
           <div className="px-3 mt-2 ">
-            <div className="flex flex-row justify-between">
+            <div className="flex flex-row justify-between items-center">
               <div className="flex space-x-1">
                 {game.parentPlatforms.map((platform) => (
-                  <Image
+                  <img
+                    className="w-5 h-5"
                     key={platform.id}
                     alt={game.name}
                     src={getPlatformImg(platform.slug)}
-                    height={18}
-                    width={18}
                   />
                 ))}
               </div>
