@@ -13,6 +13,10 @@ const seedGames = async () => {
         backgroundImage: game.background_image,
         screenshots: game.short_screenshots.map((screenshot) => screenshot.image),
         metacritic: game.metacritic,
+        released: new Date(game.released).toISOString(),
+        tba: game.tba,
+        pcRequirements: game.platforms.find((platform) => platform.platform.slug === 'pc')
+          ?.requirements_en,
         esrbRating: game.esrb_rating
           ? {
               connectOrCreate: {

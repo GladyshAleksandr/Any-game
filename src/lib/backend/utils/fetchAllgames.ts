@@ -8,7 +8,6 @@ async function fetchGames(page: number) {
       `https://api.rawg.io/api/games?key=${process.env.RAWG_API_KEY}&page=${page}&page_size=${pageSize}`
     )
     const games: Games[] = gamesReq.data.results
-
     return games
   } catch (error) {
     console.error('Error fetching games:', error)

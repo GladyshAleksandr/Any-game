@@ -6,6 +6,17 @@ export type Games = {
   short_screenshots: { image: string }[]
   metacritic: number
   rating_top: number
+  released: string
+  tba: boolean
+  platforms: {
+    platform: {
+      slug: string
+    }
+    requirements_en: {
+      minimum: string
+      recommended: string
+    }
+  }[]
   esrb_rating: {
     id: number
     name: string

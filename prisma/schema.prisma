@@ -41,6 +41,64 @@ model Tag {
   games               Game[]
 }
 
+model Rating {
+  id          Int       @id @default(autoincrement())
+  rating      Float
+  createdAt   DateTime  @default(now())
+
+  user        User      @relation(fields: [userId], references: [id])
+  userId      Int
+  game        Game      @relation(fields: [gameId], references: [id])
+  gameId      Int
+}
+model Comment {
+  id          Int       @id @default(autoincrement())
+  content     String
+  createdAt   DateTime  @default(now())
+  commentAction   CommentAction[]
+
+  user        User      @relation(fields: [userId], references: [id])
+  userId      Int
+  game        Game      @relation(fields: [gameId], references: [id])
+  gameId      Int
+}
+model CommentAction {
+  id          Int           @id @default(autoincrement())
+  type        CommentActionType
+  createdAt   DateTime      @default(now())
+
+  userId      Int
+  user        User          @relation(fields: [userId], references: [id])
+  commentId   Int
+  comment     Comment       @relation(fields: [commentId], references: [id])
+}
+
+enum CommentActionType {
+  LIKE
+  DISLIKE
+  REPLY
+}
+
+// model Playlist {
+
+// }
+
+model User {
+  id                  Int     @id @default(autoincrement())
+  username            String? @unique
+  name                String?
+  profileImage        String
+
+  ratings             Rating[]
+  comments            Comment[]
+  commentAction       CommentAction[]
+  playing             Game[]   @relation("Playing")
+  beaten              Game[]   @relation("Beaten")
+  dropped             Game[]   @relation("Dropped")
+  toPlay              Game[]   @relation("ToPlay")
+ 
+}
+
 model Game {
   id                  Int      @id @default(autoincrement())
   name                String
@@ -49,10 +107,21 @@ model Game {
   screenshots         String[]
   metacritic          Int?
   esrbRatingId        Int?
+  released            DateTime
+  tba                 Boolean
+  pcRequirements      Json?  
+  ratingsCount        Int?
+  averageRating       Float?
+
   esrbRating          EsrbRating? @relation(fields: [esrbRatingId], references: [id])
   parentPlatforms     ParentPlatform[]
   genres              Genre[]
-  tags                Tag[]           
-  // released DateTime
-  // requirements  Obj
+  tags                Tag[]   
+  ratings             Rating[]
+  comments            Comment[]
+  playingBy           User[]   @relation("Playing")
+  beatenBy            User[]   @relation("Beaten")
+  droppedBy           User[]   @relation("Dropped")
+  toPlayBy            User[]   @relation("ToPlay")
+
 }
