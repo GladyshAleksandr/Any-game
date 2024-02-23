@@ -102,6 +102,7 @@ model UserGameStatus {
 model User {
   id                  Int     @id @default(autoincrement())
   username            String? @unique
+  email               String? @unique
   name                String?
   profileImage        String
 
