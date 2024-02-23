@@ -1,3 +1,4 @@
+import serializeData from '@/lib/backend/utils/serializeData'
 import prisma from '@/lib/prisma'
 import { GameExtended } from '@/types/types'
 import { GetServerSidePropsContext } from 'next'
@@ -113,9 +114,11 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     }
   })
 
+  const serializedGames = serializeData(game)
+
   return {
     props: {
-      game
+      game: serializedGames
     }
   }
 }

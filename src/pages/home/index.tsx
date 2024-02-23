@@ -1,4 +1,5 @@
 import getGames from '@/lib/backend/utils/getGames'
+import serializeData from '@/lib/backend/utils/serializeData'
 import GameCards from '@/modules/home/components/molecules/GameCards'
 import SearchGames from '@/modules/home/components/molecules/SearchGames'
 import { GameExtended } from '@/types/types'
@@ -34,10 +35,10 @@ const Home = ({ games }: ComponentProps) => {
 
 export async function getServerSideProps() {
   const games = await getGames()
-
+  const serializedGames = serializeData(games)
   return {
     props: {
-      games
+      games: serializedGames
     }
   }
 }

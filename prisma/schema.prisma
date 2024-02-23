@@ -79,6 +79,22 @@ enum CommentActionType {
   REPLY
 }
 
+enum GameStatus {
+  PLAYING
+  BEATEN
+  DROPPED
+  TO_PLAY
+}
+
+model UserGameStatus {
+  id          Int       @id @default(autoincrement())
+  userId      Int 
+  user        User          @relation(fields: [userId], references: [id])
+  gameId      Int
+  game        Game          @relation(fields: [gameId], references: [id])
+  status      GameStatus
+}
+
 // model Playlist {
 
 // }
@@ -92,10 +108,7 @@ model User {
   ratings             Rating[]
   comments            Comment[]
   commentAction       CommentAction[]
-  playing             Game[]   @relation("Playing")
-  beaten              Game[]   @relation("Beaten")
-  dropped             Game[]   @relation("Dropped")
-  toPlay              Game[]   @relation("ToPlay")
+  games               UserGameStatus[]
  
 }
 
@@ -119,9 +132,5 @@ model Game {
   tags                Tag[]   
   ratings             Rating[]
   comments            Comment[]
-  playingBy           User[]   @relation("Playing")
-  beatenBy            User[]   @relation("Beaten")
-  droppedBy           User[]   @relation("Dropped")
-  toPlayBy            User[]   @relation("ToPlay")
-
+  users               UserGameStatus[]
 }
