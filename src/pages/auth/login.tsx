@@ -1,7 +1,7 @@
 import JWT from '@/lib/ui/api-client/auth/jwt'
 import Input from 'components/Input'
 import { useRef } from 'react'
-import { hashPassword } from '@/lib/utils/bcrypt/hashPassword'
+import router from 'next/router'
 
 const Login = () => {
   const usernameOrEmailRef = useRef<HTMLInputElement>(null)
@@ -12,9 +12,12 @@ const Login = () => {
     const password = passwordRef?.current?.value
 
     if (usernameOrEmail && password) {
-      const hashedPassword = await hashPassword(password)
-      const response = await JWT.login({ usernameOrEmail, password: hashedPassword })
-      localStorage.setItem('token', response.data.token)
+      const response = await JWT.login({ usernameOrEmail, password })
+      if (response.status === 200) {
+        router.push('/profile')
+      } else {
+        // Handle errors
+      }
     } else console.error('Enter username and pass') //TODO
   }
   return (

@@ -2,6 +2,7 @@ import prisma from '@/lib/prisma'
 import Auth from '@/lib/ui/types/Auth'
 import { NextApiRequest, NextApiResponse } from 'next'
 import jwt from 'jsonwebtoken'
+import { hashPassword } from '@/lib/utils/bcrypt/hashPassword'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
@@ -15,21 +16,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     if (user) {
       if (user.username === username)
-        return res.status(400).json({ error: 'Username already taken' })
-      else return res.status(400).json({ error: 'Email already taken' })
+        return res.status(400).json({ message: 'Username already taken' })
+      return res.status(400).json({ message: 'Email already taken' })
     }
 
+    const hashedPassword = await hashPassword(password)
     const createdUser = await prisma.user.create({
       data: {
         username,
         email,
-        password
+        password: hashedPassword
       }
     })
 
-    const token = jwt.sign({ username }, password)
-
-    res.status(200).json({ data: { createdUser, token } })
+    res.status(200).json({ message: 'User created successfully' })
   } catch (error) {
     console.error(error)
     res.status(500).json({ error })
