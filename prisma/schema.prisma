@@ -101,10 +101,12 @@ model UserGameStatus {
 
 model User {
   id                  Int     @id @default(autoincrement())
-  username            String? @unique
-  email               String? @unique
+  username            String  @unique
+  email               String  @unique
   name                String?
-  profileImage        String
+  profileImage        String?
+  password            String
+  resetPasswordToken  String?
 
   ratings             Rating[]
   comments            Comment[]
