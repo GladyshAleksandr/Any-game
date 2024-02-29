@@ -29,6 +29,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
     })
 
+    const token = jwt.sign({ userId: createdUser.id }, process.env.JWT_SECRET as string, {
+      expiresIn: '30d'
+    })
+
+    res.setHeader(
+      'Set-Cookie',
+      `jwtToken=${token}; Path=/; Max-Age=2592000; HttpOnly; Secure; SameSite=Strict`
+    )
+
     res.status(200).json({ message: 'User created successfully' })
   } catch (error) {
     console.error(error)
