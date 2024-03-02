@@ -1,6 +1,5 @@
 import getColorFromRating from '@/lib/ui/utils/getColorFromRating'
 import getPlatformImg from '@/lib/ui/utils/getPlatformImg'
-import Image from 'next/image'
 import { GameExtended } from '@/types/types'
 import { useRouter } from 'next/router'
 

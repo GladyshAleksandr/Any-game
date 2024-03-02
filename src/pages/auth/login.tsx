@@ -1,8 +1,9 @@
-import JWT from '@/lib/ui/api-client/auth/jwt'
+import JWT from '@/lib/ui/api-client/auth'
 import Input from 'components/Input'
 import { ChangeEvent, FormEvent, useState } from 'react'
 import router from 'next/router'
 import classNames from '@/lib/utils/classNames'
+import { signIn } from 'next-auth/react'
 
 const Login = () => {
   const [usernameOrEmail, setUsernameOrEmail] = useState('')
@@ -29,6 +30,15 @@ const Login = () => {
   const handlePasswordChange = (event: ChangeEvent<HTMLInputElement>) =>
     setPassword(event.target.value)
 
+  const handleSignIn = async () => {
+    try {
+      await signIn('google') // Replace 'google' with the name of your OAuth provider
+    } catch (error) {
+      console.error('Error signing in:', error)
+      // Handle any errors that occur during sign-in
+    }
+  }
+
   const onSignUpClick = () => router.push('signup')
   return (
     <div>
@@ -52,6 +62,7 @@ const Login = () => {
         <div onClick={onSignUpClick} className="text-center text-sm cursor-pointer">
           Don't have an account? Sign up
         </div>
+        <button onClick={handleSignIn}>Sign in with Google</button>
       </form>
     </div>
   )

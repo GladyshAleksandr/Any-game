@@ -1,6 +1,7 @@
-import JWT from '@/lib/ui/api-client/auth/jwt'
+import JWT from '@/lib/ui/api-client/auth'
 import classNames from '@/lib/utils/classNames'
 import Input from 'components/Input'
+import { signIn } from 'next-auth/react'
 import router from 'next/router'
 import { ChangeEvent, FormEvent, useState } from 'react'
 
@@ -63,6 +64,7 @@ const SignUp = () => {
         <div onClick={onLoginClick} className="text-center text-sm cursor-pointer">
           Don't have an account? Log in
         </div>
+        <button onClick={() => signIn('google')}>Sign up with Google</button>
       </form>
     </div>
   )
