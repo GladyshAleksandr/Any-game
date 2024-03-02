@@ -1,19 +1,15 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import jwt from 'jsonwebtoken'
 import prisma from '@/lib/prisma'
+import { getSession } from 'next-auth/react'
 
-export interface AuthSession {
-  expires: string
+type UserFromMiddleware = {
   user: {
     id: number
     username: string
     email: string
     name: string | null
-  }
-}
-
-export interface ExtendRequestSession {
-  session: AuthSession
+  } | null
 }
 
 export const sessionMiddleware = async (
@@ -23,23 +19,28 @@ export const sessionMiddleware = async (
 ) => {
   const token = req.cookies.token
 
-  if (!token) {
-    return res.status(401).json({ error: 'Authorization token missing' })
-  }
-
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as { userId: number }
+    if (token) {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as { userId: number }
 
-    const user = await prisma.user.findUnique({
-      where: { id: decoded.userId },
-      select: { id: true, username: true, email: true, name: true }
-    })
+      const user = await prisma.user.findUnique({
+        where: { id: decoded.userId },
+        select: { id: true, username: true, email: true, name: true }
+      })
 
-    if (!user) {
-      return res.status(404).json({ error: 'User not found' })
+      ;(req as UserFromMiddleware & NextApiRequest).user = user
+    } else {
+      const session = await getSession({ req })
+
+      if (!session || !session.user?.email) return res.redirect('/auth/login')
+
+      const user = await prisma.user.findUnique({
+        where: { email: session.user.email },
+        select: { id: true, username: true, email: true, name: true }
+      })
+
+      ;(req as UserFromMiddleware & NextApiRequest).user = user
     }
-
-    ;(req as ExtendRequestSession & NextApiRequest).session.user = user
 
     next()
   } catch (error) {

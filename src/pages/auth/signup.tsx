@@ -1,7 +1,8 @@
 import JWT from '@/lib/ui/api-client/auth'
 import classNames from '@/lib/utils/classNames'
 import Input from 'components/Input'
-import { signIn } from 'next-auth/react'
+import { GetServerSidePropsContext } from 'next'
+import { getSession, signIn } from 'next-auth/react'
 import router from 'next/router'
 import { ChangeEvent, FormEvent, useState } from 'react'
 
@@ -70,4 +71,15 @@ const SignUp = () => {
   )
 }
 
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const session = await getSession(context)
+
+  if (session || context.req.cookies.token) {
+    return { redirect: { permanent: false, destination: '/home' } }
+  }
+
+  return {
+    props: {}
+  }
+}
 export default SignUp

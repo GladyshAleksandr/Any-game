@@ -1,28 +1,47 @@
-import { Session } from 'next-auth'
-import { AuthSession } from '../middlewares/sessionMiddleware'
 import prisma from '@/lib/prisma'
+import { GetServerSidePropsContext } from 'next'
+import { getSession } from 'next-auth/react'
+import jwt from 'jsonwebtoken'
 
-export const userFromSession = async (session: Session): Promise<UserFromSession | null> => {
-  const userId = (session as unknown as AuthSession)?.user?.id
+export const userFromSessionOrJWT = async (
+  context: GetServerSidePropsContext,
+  isAuthRequired?: boolean
+): Promise<any> => {
+  const select = { id: true, username: true, email: true, name: true, profileImage: true }
 
-  const user = await prisma.user.findUnique({
-    where: { id: userId },
-    select: {
-      id: true,
-      username: true,
-      email: true,
-      profileImage: true
-    }
-  })
+  const session = await getSession(context)
+  const email = session?.user?.email
+  const token = context.req.cookies.token || context.req.headers.authorization?.split(' ')[1]
 
-  if (!user) return null
+  let user = null
+
+  if (token) {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as { userId: number }
+
+    user = await prisma.user.findUnique({
+      where: { id: decoded.userId },
+      select
+    })
+  } else if (email) {
+    user = await prisma.user.findUnique({
+      where: { email: email },
+      select
+    })
+
+    if (!user) user = 
+  }
+
+  if (isAuthRequired && !user) {
+    return { redirect: { permanent: false, destination: 'auth/login' } }
+  }
 
   return user
 }
 
-type UserFromSession = {
-  id: number
-  username: string
-  email: string
-  profileImage: string | null
-}
+// type userFromSessionOrJWT = {
+//   id: number
+//   username: string
+//   email: string
+//   name: string | null
+//   profileImage: string | null
+// }

@@ -3,7 +3,9 @@ import Input from 'components/Input'
 import { ChangeEvent, FormEvent, useState } from 'react'
 import router from 'next/router'
 import classNames from '@/lib/utils/classNames'
-import { signIn } from 'next-auth/react'
+import { getSession, signIn } from 'next-auth/react'
+import { GetServerSidePropsContext } from 'next'
+import { userFromSessionOrJWT } from '@/lib/backend/repositories/user.repository'
 
 const Login = () => {
   const [usernameOrEmail, setUsernameOrEmail] = useState('')
@@ -59,13 +61,23 @@ const Login = () => {
         >
           Log in
         </button>
-        <div onClick={onSignUpClick} className="text-center text-sm cursor-pointer">
+      </form>
+      <div className="w-80 text-center">
+        <div onClick={onSignUpClick} className="text-sm cursor-pointer">
           Don't have an account? Sign up
         </div>
-        <button onClick={handleSignIn}>Sign in with Google</button>
-      </form>
+        <div className="cursor-pointer" onClick={handleSignIn}>
+          Sign in with Google
+        </div>
+      </div>
     </div>
   )
+}
+
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  return {
+    props: {}
+  }
 }
 
 export default Login
