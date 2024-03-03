@@ -14,7 +14,7 @@ const SignUp = () => {
   const [confirmPassword, setConfirmPassword] = useState('')
 
   const isDisabled = !username || !email || !password || !confirmPassword
-  //TODO Password handler
+  //TODO Email, username password handler
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
