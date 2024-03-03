@@ -11,7 +11,7 @@ export const userFromSessionOrJWT = async (
 
   const session = await getSession(context)
   const email = session?.user?.email
-  const token = context.req.cookies.token || context.req.headers.authorization?.split(' ')[1]
+  const token = context.req.cookies.jwtToken || context.req.headers.authorization?.split(' ')[1]
 
   let user = null
 
@@ -27,8 +27,6 @@ export const userFromSessionOrJWT = async (
       where: { email: email },
       select
     })
-
-    if (!user) user = 
   }
 
   if (isAuthRequired && !user) {
@@ -37,11 +35,3 @@ export const userFromSessionOrJWT = async (
 
   return user
 }
-
-// type userFromSessionOrJWT = {
-//   id: number
-//   username: string
-//   email: string
-//   name: string | null
-//   profileImage: string | null
-// }

@@ -3,9 +3,9 @@ import Input from 'components/Input'
 import { ChangeEvent, FormEvent, useState } from 'react'
 import router from 'next/router'
 import classNames from '@/lib/utils/classNames'
-import { getSession, signIn } from 'next-auth/react'
+import { signIn } from 'next-auth/react'
 import { GetServerSidePropsContext } from 'next'
-import { userFromSessionOrJWT } from '@/lib/backend/repositories/user.repository'
+import shouldRedirectFromLogin from '@/lib/backend/utils/shouldRedirectFromLogin'
 
 const Login = () => {
   const [usernameOrEmail, setUsernameOrEmail] = useState('')
@@ -67,7 +67,7 @@ const Login = () => {
           Don't have an account? Sign up
         </div>
         <div className="cursor-pointer" onClick={handleSignIn}>
-          Sign in with Google
+          Continue with Google
         </div>
       </div>
     </div>
@@ -75,6 +75,10 @@ const Login = () => {
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const shouldRedirect = await shouldRedirectFromLogin(context)
+
+  if (shouldRedirect) return { redirect: { permanent: false, destination: '/home' } }
+
   return {
     props: {}
   }

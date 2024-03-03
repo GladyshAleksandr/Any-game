@@ -15,6 +15,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     if (!user) return res.status(400).json({ message: 'You entered wrong username or password' })
 
+    if (!user.password)
+      return res
+        .status(400)
+        .json({
+          message:
+            'No password associated with this account, because you signed up via Google. Please sign in via Google'
+        })
+
     const isMatch = await compareHashedPassword(password, user.password)
 
     if (!isMatch) {

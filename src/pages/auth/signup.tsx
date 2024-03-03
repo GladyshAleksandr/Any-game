@@ -1,8 +1,9 @@
+import shouldRedirectFromLogin from '@/lib/backend/utils/shouldRedirectFromLogin'
 import JWT from '@/lib/ui/api-client/auth'
 import classNames from '@/lib/utils/classNames'
 import Input from 'components/Input'
 import { GetServerSidePropsContext } from 'next'
-import { getSession, signIn } from 'next-auth/react'
+import { signIn } from 'next-auth/react'
 import router from 'next/router'
 import { ChangeEvent, FormEvent, useState } from 'react'
 
@@ -62,21 +63,21 @@ const SignUp = () => {
         >
           Log in
         </button>
+      </form>
+      <div className="w-80 text-center">
         <div onClick={onLoginClick} className="text-center text-sm cursor-pointer">
           Don't have an account? Log in
         </div>
-        <button onClick={() => signIn('google')}>Sign up with Google</button>
-      </form>
+        <div onClick={() => signIn('google')}>Continue with Google</div>
+      </div>
     </div>
   )
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const session = await getSession(context)
+  const shouldRedirect = await shouldRedirectFromLogin(context)
 
-  if (session || context.req.cookies.token) {
-    return { redirect: { permanent: false, destination: '/home' } }
-  }
+  if (shouldRedirect) return { redirect: { permanent: false, destination: '/home' } }
 
   return {
     props: {}

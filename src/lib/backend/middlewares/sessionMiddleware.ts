@@ -17,7 +17,7 @@ export const sessionMiddleware = async (
   res: NextApiResponse,
   next: () => void
 ) => {
-  const token = req.cookies.token
+  const token = req.cookies.jwtToken
 
   try {
     if (token) {

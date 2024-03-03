@@ -105,7 +105,7 @@ model User {
   email               String  @unique
   name                String?
   profileImage        String?
-  password            String
+  password            String?
   resetPasswordToken  String?
 
   ratings             Rating[]
