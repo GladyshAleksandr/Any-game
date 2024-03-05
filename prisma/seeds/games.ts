@@ -1,9 +1,11 @@
-import { fetchAllGames } from '@/lib/backend/utils/fetchAllgames'
+import { fetchAllGames } from '@/lib/backend/utils/RAWG/fetchAllgames'
+import updateRawgGamesDetails from '@/lib/backend/utils/RAWG/fetchRawgGamesAdditionalData'
 import prisma from '@/lib/prisma'
 
 const seedGames = async () => {
   try {
     const games = await fetchAllGames()
+    const rawgGamesWithAdditionalData = await updateRawgGamesDetails(games)
 
     const gameData = games.map((game) => ({
       where: { slug: game.slug },

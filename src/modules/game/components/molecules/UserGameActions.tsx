@@ -32,8 +32,9 @@ const UserGameActions = () => {
   }
   return (
     <div className="flex flex-col mt-4 space-y-2 bg-red-400">
-      {userGameActions.map((el) => (
+      {userGameActions.map((el, index) => (
         <div
+          key={index}
           onClick={handleOnClick(el.value)}
           className="w-40 h-10 flex items-center justify-center border-2 rounded-lg cursor-pointer "
         >

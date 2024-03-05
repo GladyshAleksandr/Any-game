@@ -41,6 +41,9 @@ const Footer = () => {
             <div>Contact Us</div>
             <div>Careers</div>
           </div>
+          <Link target="_blank" className="text-center" href={'https://rawg.io'}>
+            Powered by RAWG
+          </Link>
         </div>
         <div className="flex space-x-2">
           {socialMedia.map((el) => (

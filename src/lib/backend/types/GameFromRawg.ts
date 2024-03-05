@@ -1,4 +1,4 @@
-export type Games = {
+export type GameFromRawg = {
   id: number
   name: string
   background_image: string

@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { Games } from '@/lib/backend/types/Games'
+import { GameFromRawg } from '@/lib/backend/types/GameFromRawg'
 
 async function fetchGames(page: number) {
   try {
@@ -7,7 +7,7 @@ async function fetchGames(page: number) {
     const gamesReq = await axios.get(
       `https://api.rawg.io/api/games?key=${process.env.RAWG_API_KEY}&page=${page}&page_size=${pageSize}`
     )
-    const games: Games[] = gamesReq.data.results
+    const games: GameFromRawg[] = gamesReq.data.results
     return games
   } catch (error) {
     console.error('Error fetching games:', error)
@@ -26,7 +26,7 @@ export async function fetchAllGames() {
       currentPage++ // Move to the next page
       nextPageGames = await fetchGames(currentPage)
     }
-    return allGames as Games[]
+    return allGames as GameFromRawg[]
   } catch (error) {
     console.error('Error fetching all games:', error)
     return []

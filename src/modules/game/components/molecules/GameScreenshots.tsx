@@ -16,7 +16,7 @@ const GameScreeenshots = ({ game, setSelectedScreenshot }: ComponentProps) => {
         index === maxScreenshots ? (
           <div key={index} className="flex justify-center items-center cursor-pointer">
             <Image
-              onClick={() => null} // TODO show all screenshots
+              onClick={() => setSelectedScreenshot(0)} // TODO page for all screenshots
               className="object-cover rounded-2xl opacity-10"
               src={screenshot}
               alt=""
