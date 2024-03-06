@@ -121,6 +121,8 @@ model Game {
   slug                String   @unique
   backgroundImage     String
   screenshots         String[]
+  trailers            String[] // TODO MIGRATE
+  description         String
   metacritic          Int?
   esrbRatingId        Int?
   released            DateTime
