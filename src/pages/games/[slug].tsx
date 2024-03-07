@@ -16,7 +16,6 @@ type GameType = {
 const Game = ({ game, gameReq }: GameType) => {
   const [selectedScreenshot, setSelectedScreenshot] = useState<number | null>(null)
   console.log('gameReq', gameReq)
-  // TODO Get list of games that part ot same series from Rawg? or maybe just add creators and take these games from them  3
   // TODO improove carousel UI 4
 
   return (
@@ -74,8 +73,12 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   // const gameReq = await axios.get(
   //   `https://api.rawg.io/api/games/${1}?key=${process.env.RAWG_API_KEY}`
   // )
+  // const gameReq = await axios.get(
+  //   `https://api.rawg.io/api/games/${3328}/game-series?key=${process.env.RAWG_API_KEY}`
+  // )
+
   const gameReq = await axios.get(
-    `https://api.rawg.io/api/games/${3328}/game-series?key=${process.env.RAWG_API_KEY}`
+    `https://api.rawg.io/api/developers?key=${process.env.RAWG_API_KEY}`
   )
 
   return {

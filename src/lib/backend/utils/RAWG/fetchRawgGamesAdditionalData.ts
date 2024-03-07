@@ -8,9 +8,7 @@ const fetchRawgGamesAdditionalData = async (games: GameFromRawg[]) => {
   const gamesWithDescription = await addGamesDescription(games)
   const gamesWithTrailers = await addGamesTrailers(gamesWithDescription)
 
-  const finalGamesResult = null
-
-  return finalGamesResult
+  return gamesWithTrailers
 }
 
 export default fetchRawgGamesAdditionalData
@@ -37,25 +35,9 @@ const addGamesTrailers = async (games: GameWithDescription[]) => {
       return {
         ...game,
         trailers: gameTrailers.data.results.map((el: any) => el.data.max)
-      } as GameWithTrailers
+      } as GameFromRawg & { description_raw: string; trailers: string[] }
     })
   )
 
   return gamesWithTrailers
-}
-
-const addGamesPartOfSeries = async (games: GameWithDescription[]) => {
-  const gamesWithPartOfSeries = await Promise.all(
-    games.map(async (game) => {
-      const gamePartOfSeries = await axios.get(
-        `https://api.rawg.io/api/games/${game.id}/game-series?key=${process.env.RAWG_API_KEY}`
-      )
-      return {
-        ...game,
-        games: gamePartOfSeries.data.results
-      }
-    })
-  )
-
-  return gamesWithPartOfSeries
 }

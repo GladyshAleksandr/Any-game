@@ -97,7 +97,14 @@ model UserGameStatus {
 
 // model Playlist {
 
-// }
+// 
+
+model GameStudio {
+  id                  Int     @id @default(autoincrement())
+  slug                String  @unique
+  name                String
+  games               Game[]
+}
 
 model User {
   id                  Int     @id @default(autoincrement())
@@ -122,14 +129,15 @@ model Game {
   backgroundImage     String
   screenshots         String[]
   trailers            String[] // TODO MIGRATE
-  description         String
+  description         String?
   metacritic          Int?
-  esrbRatingId        Int?
   released            DateTime
   tba                 Boolean
   pcRequirements      Json?  
   ratingsCount        Int?
   averageRating       Float?
+  esrbRatingId        Int?
+  gameStudioId        Int?
 
   esrbRating          EsrbRating? @relation(fields: [esrbRatingId], references: [id])
   parentPlatforms     ParentPlatform[]
@@ -138,4 +146,5 @@ model Game {
   ratings             Rating[]
   comments            Comment[]
   users               UserGameStatus[]
+  gameStudio          GameStudio? @relation(fields: [gameStudioId], references: [id])
 }
