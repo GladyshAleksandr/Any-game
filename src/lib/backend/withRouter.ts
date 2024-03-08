@@ -1,16 +1,10 @@
 import { NextApiRequest, NextApiResponse } from 'next'
+import { Middleware } from './middlewares/sessionMiddleware'
 
 export type RouterFunction<R = {}> = (
   req: NextApiRequest & R,
   res: NextApiResponse
 ) => Promise<any> | any
-
-export type Middleware<R = {}> = (
-  req: NextApiRequest & R,
-  res: NextApiResponse,
-  next?: () => void
-) => Promise<any> | any
-
 interface UseRouterData<R = {}> {
   req: NextApiRequest & R
   res: NextApiResponse
@@ -69,13 +63,15 @@ export const withRouter = async <R = {}>(data: UseRouterData<R>) => {
     DELETE: deleteRoute
   }
 
-  if (routesMapping[req.method]) {
+  const method = req.method as keyof typeof routesMapping
+
+  if (routesMapping[method]) {
     try {
       return await useRoute<R>(
         req,
         res,
-        routesMapping[req.method].controller,
-        routesMapping[req.method].middlewares
+        routesMapping[method]!.controller,
+        routesMapping[method]!.middlewares
       )
     } catch (err) {
       return res.status(500).send({ message: {} })

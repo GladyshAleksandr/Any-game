@@ -1,17 +1,18 @@
-import { UserGameStatus } from '@prisma/client'
+import { GameStatus } from '@prisma/client'
 import axios from 'axios'
 
-const create = async (status: UserGameStatus) => axios.post('api/user-game-status', status)
+const create = async (gameId: number, status: GameStatus) =>
+  axios.post(`api/user-game-status`, { gameId, status })
+
+const update = async (id: number, status: GameStatus) =>
+  axios.post(`api/user-game-status/${id}`, { status })
 
 const destroy = async (gameId: number) => axios.delete(`api/user-game-status/${gameId}`)
 
-const update = async (gameId: number, status: UserGameStatus) =>
-  axios.post(`api/game_user_status/${gameId}`, status)
-
 const UserGameStatus = {
   create,
-  destroy,
-  update
+  update,
+  destroy
 }
 
 export default UserGameStatus

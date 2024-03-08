@@ -9,12 +9,18 @@ export interface AuthSession {
     username: string
     email: string
     name: string | null
-  } | null
+  }
 }
 
 export interface ExtendRequestSession {
   session: AuthSession
 }
+
+export type Middleware<R = {}> = (
+  req: NextApiRequest & R,
+  res: NextApiResponse,
+  next: () => Promise<void>
+) => Promise<void | NextApiResponse<any>>
 
 export const sessionMiddleware = async (
   req: NextApiRequest,
@@ -27,7 +33,7 @@ export const sessionMiddleware = async (
     if (token) {
       const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as { userId: number }
 
-      const user = await prisma.user.findUnique({
+      const user = await prisma.user.findUniqueOrThrow({
         where: { id: decoded.userId },
         select: { id: true, username: true, email: true, name: true }
       })
@@ -38,7 +44,7 @@ export const sessionMiddleware = async (
 
       if (!session || !session.user?.email) return res.redirect('/auth/login')
 
-      const user = await prisma.user.findUnique({
+      const user = await prisma.user.findUniqueOrThrow({
         where: { email: session.user.email },
         select: { id: true, username: true, email: true, name: true }
       })
