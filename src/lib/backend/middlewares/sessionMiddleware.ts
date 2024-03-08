@@ -2,14 +2,18 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import jwt from 'jsonwebtoken'
 import prisma from '@/lib/prisma'
 import { getSession } from 'next-auth/react'
-
-type UserFromMiddleware = {
+export interface AuthSession {
+  expires: string
   user: {
     id: number
     username: string
     email: string
     name: string | null
   } | null
+}
+
+export interface ExtendRequestSession {
+  session: AuthSession
 }
 
 export const sessionMiddleware = async (
@@ -28,7 +32,7 @@ export const sessionMiddleware = async (
         select: { id: true, username: true, email: true, name: true }
       })
 
-      ;(req as UserFromMiddleware & NextApiRequest).user = user
+      ;(req as ExtendRequestSession & NextApiRequest).session.user = user
     } else {
       const session = await getSession({ req })
 
@@ -39,7 +43,7 @@ export const sessionMiddleware = async (
         select: { id: true, username: true, email: true, name: true }
       })
 
-      ;(req as UserFromMiddleware & NextApiRequest).user = user
+      ;(req as ExtendRequestSession & NextApiRequest).session.user = user
     }
 
     next()

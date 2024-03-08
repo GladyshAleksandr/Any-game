@@ -4,18 +4,15 @@ import GameScreeenshots from '@/modules/game/components/molecules/GameScreenshot
 import UserGameActions from '@/modules/game/components/molecules/UserGameActions'
 import Carousel from '@/modules/game/components/organisms/Carousel'
 import { GameExtended } from '@/types/types'
-import axios from 'axios'
 import { GetServerSidePropsContext } from 'next'
 import Image from 'next/image'
 import { useState } from 'react'
 
 type GameType = {
   game: GameExtended
-  gameReq: any
 }
-const Game = ({ game, gameReq }: GameType) => {
+const Game = ({ game }: GameType) => {
   const [selectedScreenshot, setSelectedScreenshot] = useState<number | null>(null)
-  console.log('gameReq', gameReq)
   // TODO improove carousel UI 4
 
   return (
@@ -34,7 +31,6 @@ const Game = ({ game, gameReq }: GameType) => {
           <div>
             <p className="text-xl font-extrabold">{game.name}</p>
           </div>
-          <div>{gameReq.description_raw}</div>
         </div>
         <GameScreeenshots game={game} setSelectedScreenshot={setSelectedScreenshot} />
       </div>
@@ -65,26 +61,9 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   })
 
   const serializedGame = serializeData(game)
-
-  // const gamesReq = await axios.get(
-  //   `https://api.rawg.io/api/games?key=${process.env.RAWG_API_KEY}&page=${page}&page_size=${pageSize}`
-  // )
-
-  // const gameReq = await axios.get(
-  //   `https://api.rawg.io/api/games/${1}?key=${process.env.RAWG_API_KEY}`
-  // )
-  // const gameReq = await axios.get(
-  //   `https://api.rawg.io/api/games/${3328}/game-series?key=${process.env.RAWG_API_KEY}`
-  // )
-
-  const gameReq = await axios.get(
-    `https://api.rawg.io/api/developers?key=${process.env.RAWG_API_KEY}`
-  )
-
   return {
     props: {
-      game: serializedGame,
-      gameReq: serializeData(gameReq.data)
+      game: serializedGame
     }
   }
 }
