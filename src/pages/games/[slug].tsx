@@ -1,18 +1,29 @@
+import { userFromSessionOrJWT } from '@/lib/backend/repositories/user.repository'
 import serializeData from '@/lib/backend/utils/serializeData'
 import prisma from '@/lib/prisma'
 import GameScreeenshots from '@/modules/game/components/molecules/GameScreenshots'
 import UserGameActions from '@/modules/game/components/molecules/UserGameActions'
 import Carousel from '@/modules/game/components/organisms/Carousel'
 import { GameExtended } from '@/types/types'
+import { UserGameStatus } from '@prisma/client'
 import { GetServerSidePropsContext } from 'next'
 import Image from 'next/image'
 import { useState } from 'react'
 
-type GameType = {
-  game: GameExtended
+type UserFromDb = {
+  id: number
+  games: UserGameStatus[]
 }
-const Game = ({ game }: GameType) => {
+
+type ComponentProps = {
+  game: GameExtended
+  user: UserFromDb
+}
+const Game = ({ game, user }: ComponentProps) => {
   const [selectedScreenshot, setSelectedScreenshot] = useState<number | null>(null)
+  const [currentUserGameAction, setCurrentUserGameAction] = useState<UserGameStatus | null>(
+    (user && user.games.find((el) => el.gameId === game.id)) || null
+  )
   // TODO improove carousel UI 4
 
   return (
@@ -35,7 +46,11 @@ const Game = ({ game }: GameType) => {
         <GameScreeenshots game={game} setSelectedScreenshot={setSelectedScreenshot} />
       </div>
       <div>
-        <UserGameActions />
+        <UserGameActions
+          gameId={game.id}
+          currentUserGameAction={currentUserGameAction}
+          setCurrentUserGameAction={setCurrentUserGameAction}
+        />
       </div>
       <Carousel
         game={game}
@@ -60,10 +75,23 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     }
   })
 
+  const authUser = await userFromSessionOrJWT(context)
+
+  const user =
+    authUser &&
+    (await prisma.user.findUnique({
+      where: { id: authUser.id },
+      select: {
+        id: true,
+        games: true
+      }
+    }))
+
   const serializedGame = serializeData(game)
   return {
     props: {
-      game: serializedGame
+      game: serializedGame,
+      user
     }
   }
 }

@@ -6,7 +6,10 @@ import { withRouter } from '@/lib/backend/withRouter'
 import prisma from '@/lib/prisma'
 import { NextApiRequest, NextApiResponse } from 'next'
 
-async function handler(req: NextApiRequest & ExtendRequestSession, res: NextApiResponse) {
+export default async function handler(
+  req: NextApiRequest & ExtendRequestSession,
+  res: NextApiResponse
+) {
   await withRouter({
     req,
     res,
@@ -32,7 +35,7 @@ const createUserGameStatus = async (
         status
       }
     })
-    return res.status(200).json({ createdUserGameStatus })
+    return res.status(200).json({ ...createdUserGameStatus })
   } catch (error: any) {
     return res.status(500).json({ message: error.message })
   }

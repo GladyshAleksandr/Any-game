@@ -2,6 +2,8 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import jwt from 'jsonwebtoken'
 import prisma from '@/lib/prisma'
 import { getSession } from 'next-auth/react'
+import { NextResponse } from 'next/server'
+
 export interface AuthSession {
   expires: string
   user: {
@@ -23,11 +25,15 @@ export type Middleware<R = {}> = (
 ) => Promise<void | NextApiResponse<any>>
 
 export const sessionMiddleware = async (
-  req: NextApiRequest,
+  req: NextApiRequest & ExtendRequestSession,
   res: NextApiResponse,
   next: () => void
 ) => {
   const token = req.cookies.jwtToken
+
+  if (!req.session) {
+    req.session = { user: null } as any //If with JWT, session may be null
+  }
 
   try {
     if (token) {
@@ -37,12 +43,11 @@ export const sessionMiddleware = async (
         where: { id: decoded.userId },
         select: { id: true, username: true, email: true, name: true }
       })
-
       ;(req as ExtendRequestSession & NextApiRequest).session.user = user
     } else {
       const session = await getSession({ req })
-
-      if (!session || !session.user?.email) return res.redirect('/auth/login')
+      if (!session || !session.user?.email)
+        return res.status(302).json({ message: 'Unauthorized', redirectTo: '/auth/login' })
 
       const user = await prisma.user.findUniqueOrThrow({
         where: { email: session.user.email },
@@ -55,6 +60,6 @@ export const sessionMiddleware = async (
     next()
   } catch (error) {
     console.error('Error authenticating user:', error)
-    return res.status(401).json({ error: 'Invalid or expired token' })
+    return res.status(302).json({ message: 'Unauthorized', redirectTo: '/auth/login' })
   }
 }

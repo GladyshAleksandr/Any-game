@@ -1,4 +1,4 @@
-import shouldRedirectFromLogin from '@/lib/backend/utils/shouldRedirectFromLogin'
+import isAuth from '@/lib/backend/utils/isAuth'
 import JWT from '@/lib/ui/api-client/auth'
 import classNames from '@/lib/utils/classNames'
 import Input from 'components/Input'
@@ -75,9 +75,9 @@ const SignUp = () => {
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const shouldRedirect = await shouldRedirectFromLogin(context)
+  const isUserSingedIn = await isAuth(context)
 
-  if (shouldRedirect) return { redirect: { permanent: false, destination: '/home' } }
+  if (isUserSingedIn) return { redirect: { permanent: false, destination: '/home' } }
 
   return {
     props: {}

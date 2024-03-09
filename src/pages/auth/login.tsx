@@ -5,7 +5,7 @@ import router from 'next/router'
 import classNames from '@/lib/utils/classNames'
 import { signIn } from 'next-auth/react'
 import { GetServerSidePropsContext } from 'next'
-import shouldRedirectFromLogin from '@/lib/backend/utils/shouldRedirectFromLogin'
+import isAuth from '@/lib/backend/utils/isAuth'
 
 const Login = () => {
   const [usernameOrEmail, setUsernameOrEmail] = useState('')
@@ -75,9 +75,9 @@ const Login = () => {
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const shouldRedirect = await shouldRedirectFromLogin(context)
+  const isUserSingedIn = await isAuth(context)
 
-  if (shouldRedirect) return { redirect: { permanent: false, destination: '/home' } }
+  if (isUserSingedIn) return { redirect: { permanent: false, destination: '/home' } }
 
   return {
     props: {}

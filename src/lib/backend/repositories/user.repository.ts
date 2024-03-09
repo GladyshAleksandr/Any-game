@@ -35,3 +35,19 @@ export const userFromSessionOrJWT = async (
 
   return user
 }
+
+type UserFromSessionOrJWT = {
+  id: number
+  username: string
+  email: string
+  name: string
+  profileImage: string
+}
+
+export type UserData = {
+  id: number
+  username: string
+  email: string
+  name: string | null
+  profileImage: string | null
+}

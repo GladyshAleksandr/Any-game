@@ -6,17 +6,20 @@ import { withRouter } from '@/lib/backend/withRouter'
 import prisma from '@/lib/prisma'
 import { NextApiRequest, NextApiResponse } from 'next'
 
-async function handler(req: NextApiRequest & ExtendRequestSession, res: NextApiResponse) {
+export default async function handler(
+  req: NextApiRequest & ExtendRequestSession,
+  res: NextApiResponse
+) {
   await withRouter({
     req,
     res,
     patchRoute: {
       controller: updateUserGameStatus,
-      middlewares: [sessionMiddleware] //? Do we need this
+      middlewares: [sessionMiddleware]
     },
     deleteRoute: {
       controller: deleteUserGameStatus,
-      middlewares: [sessionMiddleware] //? Do we need this
+      middlewares: [sessionMiddleware]
     }
   })
 }
@@ -32,7 +35,7 @@ const updateUserGameStatus = async (
       where: { id },
       data: { status }
     })
-    return res.status(200).json({ updatedUserGameStatus })
+    return res.status(200).json({ ...updatedUserGameStatus })
   } catch (error: any) {
     return res.status(500).json({ message: error.message })
   }
