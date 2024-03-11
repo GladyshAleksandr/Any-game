@@ -29,7 +29,7 @@ const Footer = () => {
 
   return (
     <div className="mt-20 border-t-2">
-      <div className="flex items-center justify-between mt-6">
+      <div className="flex xxs:flex-col xsm:flex-row xxs:space-y-2 xsm:space-y-0 items-center justify-between mt-6">
         <AnyGameLogo />
         <div className="flex flex-col w-48">
           <div className="flex justify-evenly">

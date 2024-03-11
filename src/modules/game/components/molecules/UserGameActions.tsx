@@ -17,12 +17,11 @@ const UserGameActions = ({
   const userGameActions = Object.values(GameStatus).map((status) => ({
     value: status
   }))
-  console.log('currentUserGameAction', currentUserGameAction)
+
   const handleOnClick = async (status: GameStatus) => {
     try {
       if (!currentUserGameAction?.id) {
         const { data } = await UserGameStatusAPI.create(gameId, status)
-        console.log('DATA__', data)
         setCurrentUserGameAction(data)
         return
       }
@@ -32,7 +31,6 @@ const UserGameActions = ({
         return
       }
       const { data } = await UserGameStatusAPI.update(currentUserGameAction.id, status)
-      console.log('DATA__', data)
 
       setCurrentUserGameAction((prevState) => ({
         ...prevState!,
@@ -56,12 +54,23 @@ const UserGameActions = ({
     }
   }
   return (
-    <div className="flex flex-col mt-4 space-y-2 bg-red-400">
+    // <div className="flex flex-col mt-4 space-y-2">
+    //   {userGameActions.map((el, index) => (
+    //     <div
+    //       key={index}
+    //       onClick={() => handleOnClick(el.value)}
+    //       className="w-40 h-10 flex items-center justify-center border-2 rounded-lg cursor-pointer "
+    //     >
+    //       {text(el.value)}
+    //     </div>
+    //   ))}
+    // </div>
+    <div className="grid grid-cols-2 mt-4 gap-4">
       {userGameActions.map((el, index) => (
         <div
           key={index}
           onClick={() => handleOnClick(el.value)}
-          className="w-40 h-10 flex items-center justify-center border-2 rounded-lg cursor-pointer "
+          className="w-36 h-10 flex items-center justify-center border-2 rounded-lg cursor-pointer "
         >
           {text(el.value)}
         </div>

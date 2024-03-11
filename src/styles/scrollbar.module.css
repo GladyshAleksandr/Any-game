@@ -1,0 +1,9 @@
+.show-scrollbar::-webkit-scrollbar {
+  -webkit-appearance: none;
+  width: 6px;
+}
+
+.show-scrollbar::-webkit-scrollbar-thumb {
+  border-radius: 8px;
+  background-color: #4a4a4a;
+}
