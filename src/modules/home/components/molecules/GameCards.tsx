@@ -11,17 +11,17 @@ const GameCards = ({ games }: GameCardType) => {
   const router = useRouter()
 
   return (
-    <div className="grid grid-cols-5 gap-4 mt-10">
+    <div className="grid sm:grid-cols-2 mdlg:grid-cols-3 1xl:grid-cols-5 gap-4 mt-10">
       {games.map((game) => (
         <div
           key={game.id}
-          className="bg-[#1b1b1b] w-30 h-64 rounded-2xl cursor-pointer"
+          className="flex flex-col space-y-4 bg-[#1b1b1b] rounded-2xl cursor-pointer"
           onClick={() => {
             router.push('games/' + game.slug)
           }}
         >
           <img
-            className="object-cover w-full h-40 rounded-2xl"
+            className="object-cover rounded-2xl"
             src={game.backgroundImage} // Path to your image in the public directory
             alt="Description of the image"
           />

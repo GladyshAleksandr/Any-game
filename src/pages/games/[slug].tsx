@@ -45,8 +45,8 @@ const Game = ({ game, user }: ComponentProps) => {
 
   return (
     <div>
-      <div className="flex h-[400px] space-x-6 ">
-        <div className="flex flex-col items-center w-1/4">
+      <div className="grid md:grid-cols-2 xl:grid-cols-3 md:h-full xl:h-[400px] gap-6">
+        <div className="flex flex-col items-center">
           <img
             onClick={() => setSelectedScreenshot(0)}
             className={'object-cover rounded-2xl cursor-pointer'}
@@ -61,7 +61,7 @@ const Game = ({ game, user }: ComponentProps) => {
                 onPointerLeave={onPointerLeave}
                 onPointerMove={onPointerMove}
                 iconsCount={10}
-                size={35}
+                size={30}
                 SVGclassName="inline-block"
                 emptyColor={Colors.SILVER}
                 fillColor={Colors.GOLD}
@@ -77,7 +77,7 @@ const Game = ({ game, user }: ComponentProps) => {
         </div>
         <div
           className={classNames(
-            'max-h-full overflow-y-auto w-1/3 flex flex-col space-y-2',
+            'max-h-[400px] overflow-y-auto xxs:order-3 md:col-span-2 xl:order-2 xl:col-span-1 flex flex-col space-y-2',
             styles['show-scrollbar']
           )}
         >

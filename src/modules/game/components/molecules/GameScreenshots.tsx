@@ -15,7 +15,7 @@ const GameScreeenshots = ({ game, setSelectedScreenshot }: ComponentProps) => {
   return (
     <div
       className={classNames(
-        'w-1/3 flex flex-col space-y-4 max-h-full overflow-y-auto',
+        'flex flex-col xl:order-3 space-y-4 max-h-full overflow-y-auto',
         styles['show-scrollbar']
       )}
     >
@@ -25,20 +25,8 @@ const GameScreeenshots = ({ game, setSelectedScreenshot }: ComponentProps) => {
         </video>
       )}
       <div className="grid grid-cols-2 gap-4">
-        {game.screenshots.map((screenshot, index) =>
-          index === maxScreenshots ? (
-            <div key={index} className="flex justify-center items-center cursor-pointer">
-              <img
-                onClick={() => setSelectedScreenshot(0)} // TODO page for all screenshots
-                className="object-cover rounded-2xl opacity-10"
-                src={screenshot}
-              />
-              <div className="absolute flex flex-col items-center justify-center">
-                <p className="text-2xl font-bold">...</p>
-                <p>View All</p>
-              </div>
-            </div>
-          ) : (
+        {game.screenshots.map(
+          (screenshot, index) =>
             index > 0 &&
             index <= maxScreenshots && (
               <img
@@ -48,9 +36,9 @@ const GameScreeenshots = ({ game, setSelectedScreenshot }: ComponentProps) => {
                 src={screenshot}
               />
             )
-          )
         )}
       </div>
+      <p className="mx-auto cursor-pointer">View All Screenshots</p>
     </div>
   )
 }
