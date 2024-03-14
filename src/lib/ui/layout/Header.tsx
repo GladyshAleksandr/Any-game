@@ -6,8 +6,10 @@ import Notification from '@icons/Notification.svg'
 import AnyGameLogo from './components/AnyGameLogo'
 import { signOut } from 'next-auth/react'
 import { useState } from 'react'
+import { useRouter } from 'next/router'
 
 const Header = () => {
+  const router = useRouter()
   const [isOpen, setIsOpen] = useState(false)
 
   const handleSignOut = async () => {
@@ -19,6 +21,8 @@ const Header = () => {
     }
   }
 
+  const handleProfile = () => router.push('/user/profile')
+
   const handleToggle = () => {
     setIsOpen(!isOpen)
   }
@@ -26,11 +30,11 @@ const Header = () => {
     <div className="flex flex-row justify-between items-center mb-10">
       <AnyGameLogo />
       <div className="xxs:hidden md:flex flex-1 flex-row justify-end items-center space-x-4">
-        <div>Rate Game</div>
-        <div>Future Updates</div>
-        <Notification />
-        <Profile />
-        <SignOut className="" onClick={handleSignOut} />
+        <div className="cursor-pointer">Rate Game</div>
+        <div className="cursor-pointer">Future Updates</div>
+        <Notification className="cursor-pointer" />
+        <Profile className="cursor-pointer" onClick={handleProfile} />
+        <SignOut className="cursor-pointer" onClick={handleSignOut} />
       </div>
       {/* <img src={'/icons/Burger.svg'}/> */}
       <div className="relative">
