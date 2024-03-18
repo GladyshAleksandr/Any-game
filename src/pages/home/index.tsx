@@ -1,5 +1,6 @@
 import getGames from '@/lib/backend/utils/getGames'
 import serializeData from '@/lib/backend/utils/serializeData'
+import Filter from '@/modules/home/components/molecules/Filter'
 import GameCards from '@/modules/home/components/molecules/GameCards'
 import SearchGames from '@/modules/home/components/molecules/SearchGames'
 import { GameExtended } from '@/types/types'
@@ -28,6 +29,7 @@ const Home = ({ games }: ComponentProps) => {
   return (
     <div>
       <SearchGames />
+      <Filter />
       <GameCards games={games} />
     </div>
   )
