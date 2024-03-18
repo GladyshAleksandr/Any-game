@@ -1,6 +1,7 @@
 import getGames from '@/lib/backend/utils/getGames'
 import serializeData from '@/lib/backend/utils/serializeData'
-import Filter from '@/modules/home/components/molecules/Filter'
+import prisma from '@/lib/prisma'
+import Filter from '@/modules/filter/molecules/Filter'
 import GameCards from '@/modules/home/components/molecules/GameCards'
 import SearchGames from '@/modules/home/components/molecules/SearchGames'
 import { GameExtended } from '@/types/types'
@@ -29,7 +30,6 @@ const Home = ({ games }: ComponentProps) => {
   return (
     <div>
       <SearchGames />
-      <Filter />
       <GameCards games={games} />
     </div>
   )
@@ -37,6 +37,7 @@ const Home = ({ games }: ComponentProps) => {
 
 export async function getServerSideProps() {
   const games = await getGames()
+
   const serializedGames = serializeData(games)
   return {
     props: {
