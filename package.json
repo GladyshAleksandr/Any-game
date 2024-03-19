@@ -36,6 +36,7 @@
     "@types/jsonwebtoken": "^9.0.6",
     "prettier": "^3.1.1",
     "prisma": "^5.9.1",
+    "rc-slider": "^10.5.0",
     "tsx": "^4.7.0"
   }
 }
