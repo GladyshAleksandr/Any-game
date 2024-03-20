@@ -4,22 +4,14 @@ import { useState } from 'react'
 import CheckboxPlus from '@icons/CheckboxPlus.svg'
 import CheckboxMinus from '@icons/CheckboxMinus.svg'
 import CheckboxEmpty from '@icons/CheckboxEmpty.svg'
-import Slider from 'rc-slider'
-import 'rc-slider/assets/index.css'
-import { Colors } from '@/lib/ui/constants/Colors'
-
-type Option = {
-  name: string
-  slug: string
-  status: boolean | null
-}
-
-type FilterOption = {
-  text: string
-  isOpen: boolean
-  sliderOpt:  Marks | null
-  options: Option[] | null
-}
+import CustomSlider from './CustomSlider'
+import {
+  FilterOption,
+  OptionType,
+  isSearchField,
+  isCheckBox,
+  isSlider
+} from '../types/FilterOption'
 
 type ComponentProps = {
   genres: Genre[]
@@ -28,86 +20,64 @@ type ComponentProps = {
   esrbRatings: EsrbRating[]
 }
 
-type Marks = {
-  [key: number]: string;
-}
-
-const sliderValue = () => {
-  const currentYear = new Date().getFullYear();
-  const startDecade = 1980;
-  const endDecade = Math.floor(currentYear / 10) * 10; // Round down to the nearest decade
-  
-  const sliderOpt: { [key: number]: string } = {};
-  
-  // Add decades
-  for (let year = startDecade; year <= endDecade; year += 10) {
-    sliderOpt[year] = `${year}s`;
-  }
-  
-  // Add specific years
-  for (let year = endDecade + 1; year <= currentYear; year++) {
-    sliderOpt[year] = `${year}`;
-  }
-
-  return sliderOpt
-  
-}
-
 const Filter = ({ genres, tags, parentPlatforms, esrbRatings }: ComponentProps) => {
   const [filterOptions, setFilterOptions] = useState<FilterOption[]>([
-    { text: 'Search', isOpen: false, sliderOpt: null options: null },
+    {
+      text: 'Search',
+      isOpen: false,
+      type: OptionType.Search,
+      options: [{ name: '', slug: '', value: null }]
+    },
     {
       text: 'Genres',
       isOpen: false,
-      sliderOpt: null,
-      options: genres.map((genre) => ({ name: genre.name, slug: genre.slug, status: null }))
+      type: OptionType.Genres,
+      options: genres.map((genre) => ({ name: genre.name, slug: genre.slug, value: null }))
     },
     {
       text: 'Tags',
       isOpen: false,
-      sliderOpt: null,
-      options: tags.map((tag) => ({ name: tag.name, slug: tag.slug, status: null }))
+      type: OptionType.Tags,
+      options: tags.map((tag) => ({ name: tag.name, slug: tag.slug, value: null }))
     },
     {
       text: 'Platforms',
       isOpen: false,
-      sliderOpt: null,
+      type: OptionType.Platforms,
       options: parentPlatforms.map((platform) => ({
         name: platform.name,
         slug: platform.slug,
-        status: null
+        value: null
       }))
     },
     {
       text: 'Year',
       isOpen: false,
-      sliderOpt: sliderValue(),
-      options: []
+      type: OptionType.ReleaseYear,
+      options: [{ name: '', slug: '', value: null }]
     },
-    { text: 'Rating', isOpen: false, sliderOpt: {
-      0: '0',
-      1: '1',
-      2: '2',
-      3: '3',
-      4: '4',
-      5: '5',
-      6: '6',
-      7: '7',
-      8: '8',
-      9: '9',
-      10: '10'
-    }, options: [] },
+    {
+      text: 'Rating',
+      isOpen: false,
+      type: OptionType.Rating,
+      options: [{ name: '', slug: '', value: null }]
+    },
     {
       text: 'Adult Rating',
       isOpen: false,
-      sliderOpt: null,
+      type: OptionType.AdultRating,
       options: esrbRatings.map((rating) => ({
-        name: rating.name,
-        slug: rating.slug,
-        status: null
+        name: '',
+        slug: '',
+        value: null
       }))
     },
-    { text: 'Status', isOpen: false, sliderOpt: null, options: [] }
+    {
+      text: 'Status',
+      isOpen: false,
+      type: OptionType.Status,
+      options: [{ name: '', slug: '', value: null }]
+    }
   ])
 
   const handleToggleOption = (el: FilterOption) => {
@@ -132,34 +102,43 @@ const Filter = ({ genres, tags, parentPlatforms, esrbRatings }: ComponentProps) 
               onClick={() => handleToggleOption(el)}
             >
               {el.text}
-              {el.isOpen ? (<></>) : el.options && (
-              //    <Slider
-              //    range
-              //    min={0}
-              //    max={10}
-              //    step={1}
-              //    marks={marks}
-              //    trackStyle={{ backgroundColor: Colors.GOLD }}
-              //    railStyle={{ backgroundColor: Colors.SILVER }}
-              //  />
+              {el.isOpen && (
                 <div className="absolute z-10 left-0 mt-4 rounded-xl bg-[#1b1b1b]">
-                  <div
-                    className={classNames('grid w-max', el.options.length > 20 && 'grid-cols-4')}
-                  >
-                    {el.options.map((option) => (
-                      <div className="p-4 h-8 flex justify-start items-center space-x-2">
-                        {option.status === true ? (
-                          <CheckboxPlus className="w-4" />
-                        ) : option.status === false ? (
-                          <CheckboxMinus className="w-4" />
-                        ) : (
-                          <CheckboxEmpty className="w-4" />
-                        )}
-
-                        <p className="max-w-[120px] truncate text-sm">{option.name}</p>
-                      </div>
-                    ))}
-                  </div>
+                  {isSearchField(el.type) ? (
+                    <></>
+                  ) : isCheckBox(el.type) ? (
+                    <div
+                      className={classNames('grid w-max', el.options.length > 20 && 'grid-cols-')}
+                    >
+                      {el.options.map((option) => (
+                        <div
+                          className="p-4 h-8 flex justify-start items-center space-x-2"
+                          onClick={() => setFilterOptions}
+                          key={option.name}
+                        >
+                          {option.value === true ? (
+                            <CheckboxPlus className="w-4" />
+                          ) : option.value === false ? (
+                            <CheckboxMinus className="w-4" />
+                          ) : (
+                            <CheckboxEmpty className="w-4" />
+                          )}
+                          <p className="max-w-[120px] truncate text-sm">{option.name}</p>
+                        </div>
+                      ))}
+                    </div>
+                  ) : isSlider(el.type) ? (
+                    <div
+                      className={classNames(
+                        'p-8',
+                        el.type === OptionType.Rating ? 'w-[394px]' : 'w-[594px]'
+                      )}
+                    >
+                      <CustomSlider type={el.type} />
+                    </div>
+                  ) : (
+                    <></>
+                  )}
                 </div>
               )}
             </div>
