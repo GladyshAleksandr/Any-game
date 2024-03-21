@@ -18,7 +18,7 @@ const SearchGames = () => {
         <button className="bg-red-500 px-4 py-2 rounded-md">Filter</button>
       </div>
       <div
-        className=" font-bold p-2 rounded-md cursor-pointer bg-[#B59410]"
+        className="font-bold p-2 rounded-md cursor-pointer bg-darkGold"
         onClick={handleAdvancedFilter}
       >
         Advanced Filter

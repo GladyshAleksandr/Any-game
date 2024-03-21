@@ -1,7 +1,7 @@
 import getGames from '@/lib/backend/utils/getGames'
 import serializeData from '@/lib/backend/utils/serializeData'
 import prisma from '@/lib/prisma'
-import Filter from '@/modules/filter/molecules/Filter'
+import Filter from '@/modules/filter/components/organisms/Filter'
 import GameCards from '@/modules/home/components/molecules/GameCards'
 import SearchGames from '@/modules/home/components/molecules/SearchGames'
 import { GameExtended } from '@/types/types'

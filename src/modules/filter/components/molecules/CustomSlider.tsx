@@ -1,17 +1,23 @@
+import { OptionType, Option } from '@/lib/backend/types/FilterOption'
 import { Colors } from '@/lib/ui/constants/Colors'
 import Slider from 'rc-slider'
 import 'rc-slider/assets/index.css'
-import { useState } from 'react'
-import { OptionType } from '../types/FilterOption'
+import { useEffect } from 'react'
 
-const CustomSlider = ({ type }: { type: OptionType }) => {
+type ComponentProps = {
+  type: OptionType
+  options: Option[]
+  handleSlider: (type: OptionType, value: [number, number]) => void
+}
+
+const CustomSlider = ({ type, options, handleSlider }: ComponentProps) => {
   const currentYear = new Date().getFullYear()
   const startDecade = 1980
   const endDecade = Math.ceil(currentYear / 5) * 5
 
-  const [value, setValue] = useState(
-    type === OptionType.Rating ? [0, 10] : [startDecade, startDecade]
-  )
+  useEffect(() => {})
+
+  const defaultValue = type === OptionType.Rating ? [0, 0] : [startDecade, endDecade]
 
   const sliderValue = () => {
     if (type === OptionType.ReleaseYear) {
@@ -52,14 +58,13 @@ const CustomSlider = ({ type }: { type: OptionType }) => {
 
     return sliderOpt
   }
-
-  console.log('value', value)
+  console.log('options', options)
   return (
     <>
       {type === OptionType.ReleaseYear && (
         <div className="flex justify-between">
-          <p>{value[0]}</p>
-          <p>{value[1]}</p>
+          <p>{options[0].value ? options[0].value[0] : defaultValue[0]}</p>
+          <p>{options[0].value ? options[0].value[1] : defaultValue[1]}</p>
         </div>
       )}
       <Slider
@@ -67,8 +72,8 @@ const CustomSlider = ({ type }: { type: OptionType }) => {
         min={sliderValue().min}
         max={sliderValue().max}
         step={1}
-        value={value}
-        onChange={(index) => setValue(index)}
+        value={options[0].value || defaultValue}
+        onChange={(index) => handleSlider(type, index as [number, number])}
         marks={sliderValue().marks}
         trackStyle={{ backgroundColor: Colors.GOLD }}
         railStyle={{ backgroundColor: Colors.SILVER }}

@@ -1,26 +1,4 @@
-export enum OptionType {
-  Search = 1,
-  Genres,
-  Tags,
-  Platforms,
-  ReleaseYear,
-  Rating,
-  AdultRating,
-  Status
-}
-
-export type FilterOption = {
-  text: string
-  isOpen: boolean
-  type: OptionType
-  options: Option[]
-}
-
-type Option = {
-  name: string
-  slug: string
-  value: any
-}
+import { OptionType } from '@/lib/backend/types/FilterOption'
 
 export const isSearchField = (option: OptionType) => option === OptionType.Search
 

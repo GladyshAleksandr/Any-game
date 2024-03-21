@@ -4,6 +4,9 @@ const config: Config = {
   content: ['./src/**/*.{js,ts,jsx,tsx,mdx}'],
   theme: {
     extend: {
+      colors: {
+        darkGold: '#B59410'
+      },
       textColor: {
         DEFAULT: 'white'
       },
