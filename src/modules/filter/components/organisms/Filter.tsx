@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { FilterOptionType, OptionType } from '@/lib/backend/types/FilterOption'
 import getInitialFilterOptions from '../../utils/getInitialFilterOptions'
 import FilterOption from '../molecules/FilterOption'
+import { isIncludeExcludeCheckBox } from '../../utils/filterOptionUnion'
 
 type ComponentProps = {
   genres: Genre[]
@@ -36,7 +37,18 @@ const Filter = ({ genres, tags, parentPlatforms, esrbRatings }: ComponentProps) 
               ...option,
               options: option.options.map((el) =>
                 el.slug === slug
-                  ? { ...el, value: el.value === true ? false : el.value === false ? null : true }
+                  ? {
+                      ...el,
+                      value: isIncludeExcludeCheckBox(option.type)
+                        ? el.value === true
+                          ? false
+                          : el.value === false
+                            ? null
+                            : true
+                        : el.value === null
+                          ? true
+                          : null
+                    }
                   : el
               )
             }
@@ -78,7 +90,14 @@ const Filter = ({ genres, tags, parentPlatforms, esrbRatings }: ComponentProps) 
   }
 
   const hanleSubmit = () => {
-    const optionsToSend = filterOptions.filter((option) => option.options.filter((el) => el.value))
+    const optionsToSend = filterOptions
+      .filter((option) => option.options.some((el) => el.value !== null))
+      .map((option) => ({
+        type: option.type,
+        options: option.options.filter((el) => el.value !== null)
+      }))
+
+    console.log('optionsToSend', optionsToSend)
   }
 
   return (

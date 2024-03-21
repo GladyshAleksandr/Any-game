@@ -39,13 +39,13 @@ const getInitialFilterOptions = (
     text: 'Year',
     isOpen: false,
     type: OptionType.ReleaseYear,
-    options: [{ name: '', slug: '', value: null }]
+    options: [{ name: '', slug: '', value: getSliderData().defaultValue.year }]
   },
   {
     text: 'Rating',
     isOpen: false,
     type: OptionType.Rating,
-    options: [{ name: '', slug: '', value: null }]
+    options: [{ name: '', slug: '', value: getSliderData().defaultValue.rating }]
   },
   {
     text: 'Adult Rating',
@@ -61,8 +61,20 @@ const getInitialFilterOptions = (
     text: 'Status',
     isOpen: false,
     type: OptionType.Status,
-    options: [{ name: 'To Be Announced', slug: 'tba', value: false }]
+    options: [{ name: 'To Be Announced', slug: 'tba', value: null }]
   }
 ]
+
+export const getSliderData = () => {
+  const currentYear = new Date().getFullYear()
+  const startDecade = 1980
+  const endDecade = Math.ceil(currentYear / 5) * 5
+
+  const defaultValue = {
+    rating: [0, 10],
+    year: [startDecade, endDecade]
+  }
+  return { currentYear, startDecade, endDecade, defaultValue }
+}
 
 export default getInitialFilterOptions

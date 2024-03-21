@@ -5,7 +5,7 @@ import classNames from '@/lib/utils/classNames'
 import CustomSlider from '../molecules/CustomSlider'
 import { OptionType, Option } from '@/lib/backend/types/FilterOption'
 import { useRef, useEffect } from 'react'
-import { isCheckBox, isSlider } from '../../utils/filterOptionUnion'
+import { isCheckBox, isIncludeExcludeCheckBox, isSlider } from '../../utils/filterOptionUnion'
 
 type ComponentProps = {
   isOpen: boolean
@@ -41,6 +41,7 @@ const FilterSubOption = ({
       document.removeEventListener('click', handleClickOutside)
     }
   }, [isOpen])
+
   return (
     <div
       className="absolute z-10 left-0 mt-4 rounded-xl bg-[#1b1b1b]"
@@ -58,8 +59,8 @@ const FilterSubOption = ({
               onClick={() => handleToggleCheckBox(type, option.slug)}
             >
               {option.value === true ? (
-                <CheckboxPlus className="w-4" />
-              ) : option.value === false ? (
+                <CheckboxPlus className="w-4 text-white" />
+              ) : option.value === false && isIncludeExcludeCheckBox(type) ? (
                 <CheckboxMinus className="w-4" />
               ) : (
                 <CheckboxEmpty className="w-4" />
