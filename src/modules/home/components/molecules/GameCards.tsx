@@ -11,7 +11,7 @@ const GameCards = ({ games }: GameCardType) => {
   const router = useRouter()
 
   return (
-    <div className="grid sm:grid-cols-2 mdlg:grid-cols-3 1xl:grid-cols-5 gap-4 mt-10">
+    <div className="grid sm:grid-cols-2 mdlg:grid-cols-3 1xl:grid-cols-4 gap-4">
       {games.map((game) => (
         <div
           key={game.id}

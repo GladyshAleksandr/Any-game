@@ -5,10 +5,7 @@ import prisma from '@/lib/prisma'
 import { FilterReqData } from '@/lib/ui/api-client/filter'
 import { NextApiRequest, NextApiResponse } from 'next'
 
-export default async function handler(
-  req: NextApiRequest & ExtendRequestSession,
-  res: NextApiResponse
-) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   await withRouter({
     req,
     res,
@@ -18,7 +15,7 @@ export default async function handler(
   })
 }
 
-const GamesByFilter = async (req: NextApiRequest & ExtendRequestSession, res: NextApiResponse) => {
+const GamesByFilter = async (req: NextApiRequest, res: NextApiResponse) => {
   const data = req.body as FilterReqData[]
 
   const filterIncludedCheckBoxes = (arr: FilterReqData[]) => {

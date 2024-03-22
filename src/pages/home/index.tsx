@@ -1,36 +1,55 @@
 import getGames from '@/lib/backend/utils/getGames'
 import serializeData from '@/lib/backend/utils/serializeData'
-import prisma from '@/lib/prisma'
-import Filter from '@/modules/filter/components/organisms/Filter'
+import HomeAPI from '@/lib/ui/api-client/home'
 import GameCards from '@/modules/home/components/molecules/GameCards'
 import SearchGames from '@/modules/home/components/molecules/SearchGames'
 import { GameExtended } from '@/types/types'
-import { useState } from 'react'
+import Spinner from 'components/ui/Spinner'
+import { useEffect, useState } from 'react'
+import debounce from 'lodash.debounce'
+import OptionButton from 'components/ui/OptionButton'
 
 type ComponentProps = {
-  games: GameExtended[]
+  initialGames: GameExtended[]
 }
 
-// enum Platforms {
-//   PC = 'pc',
-//   PlayStation = 'playstation',
-//   XBox = 'xbox',
-//   Nintendo,
-//   Mac,
-//   Linux,
-//   Ios,
-//   Android,
-//   Web,
-//   Sega
-// }
-
-const Home = ({ games }: ComponentProps) => {
+const Home = ({ initialGames }: ComponentProps) => {
   const [page, setPage] = useState<number>(1)
+  const [isLoading, setIsLoading] = useState(false)
+  const [games, setGames] = useState(initialGames)
+
+  useEffect(() => {
+    const fetchGames = async () => {
+      try {
+        const res = await HomeAPI.games(page)
+        setGames((prevGames) => [...prevGames, ...res.data.games])
+        setIsLoading(false)
+      } catch (error) {
+        console.error('Error fetching games:', error)
+      }
+    }
+
+    if (page === 1) return
+    fetchGames()
+  }, [page])
+
+  useEffect(() => {
+    const handleScroll = debounce(() => {
+      if (window.innerHeight + window.scrollY >= document.body.offsetHeight && !isLoading) {
+        setIsLoading(true)
+        setPage((prevState) => prevState + 1)
+      }
+    }, 100)
+    window.addEventListener('scroll', handleScroll)
+
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
 
   return (
-    <div>
+    <div className="space-y-10">
       <SearchGames />
       <GameCards games={games} />
+      <OptionButton className="mx-auto"> {isLoading ? <Spinner /> : 'Load More'}</OptionButton>
     </div>
   )
 }
@@ -41,7 +60,7 @@ export async function getServerSideProps() {
   const serializedGames = serializeData(games)
   return {
     props: {
-      games: serializedGames
+      initialGames: serializedGames
     }
   }
 }

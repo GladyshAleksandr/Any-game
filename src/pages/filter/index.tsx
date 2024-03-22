@@ -21,7 +21,7 @@ const Home = ({ games, genres, tags, parentPlatforms, esrbRatings }: ComponentPr
   const [filteredGames, setFilteredGames] = useState(games)
 
   return (
-    <div>
+    <div className="space-y-10">
       <Filter
         genres={genres}
         tags={tags}

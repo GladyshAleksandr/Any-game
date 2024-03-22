@@ -1,6 +1,7 @@
 import { FilterOptionType, OptionType } from '@/lib/backend/types/FilterOption'
 import FilterSubOption from '../atoms/FilterSubOption'
 import { isSearchField } from '../../utils/filterOptionUnion'
+import OptionButton from 'components/ui/OptionButton'
 
 type ComponentProps = {
   handleToggleOption: (type?: OptionType) => void
@@ -22,15 +23,15 @@ const FilterOption = ({
   return (
     <div>
       {isSearchField(type) ? (
-        <input
-          type="text"
-          className="w-48 p-3 bg-[#1b1b1b] rounded-xl outline-none text-center cursor-text"
-          placeholder={text}
+        <OptionButton
+          isSeachField
           onChange={(event) => handleSearchField(type, event.target.value)}
-        ></input>
+        >
+          {text}
+        </OptionButton>
       ) : (
-        <div
-          className="w-48 p-3 bg-[#1b1b1b] rounded-xl text-center cursor-pointer relative"
+        <OptionButton
+          className="relative"
           onClick={(event) => {
             event.stopPropagation()
             handleToggleOption(type)
@@ -47,7 +48,7 @@ const FilterOption = ({
               handleSlider={handleSlider}
             />
           )}
-        </div>
+        </OptionButton>
       )}
     </div>
   )

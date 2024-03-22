@@ -44,7 +44,7 @@ const FilterSubOption = ({
 
   return (
     <div
-      className="absolute z-10 left-0 mt-4 rounded-xl bg-[#1b1b1b]"
+      className="absolute z-10 top-12 left-0 mt-4 rounded-xl bg-[#1b1b1b]"
       ref={menuRef}
       onClick={(event) => {
         event.stopPropagation()

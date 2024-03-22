@@ -1,7 +1,7 @@
 import isAuth from '@/lib/backend/utils/isAuth'
 import JWT from '@/lib/ui/api-client/auth'
 import classNames from '@/lib/utils/classNames'
-import Input from 'components/Input'
+import Input from 'components/ui/Input'
 import { GetServerSidePropsContext } from 'next'
 import { signIn } from 'next-auth/react'
 import router from 'next/router'
