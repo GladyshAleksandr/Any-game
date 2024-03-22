@@ -1,18 +1,27 @@
 import { EsrbRating, Genre, ParentPlatform, Tag } from '@prisma/client'
-import { useState } from 'react'
+import { Dispatch, SetStateAction, useState } from 'react'
 import { FilterOptionType, OptionType } from '@/lib/backend/types/FilterOption'
 import getInitialFilterOptions from '../../utils/getInitialFilterOptions'
 import FilterOption from '../molecules/FilterOption'
 import { isIncludeExcludeCheckBox } from '../../utils/filterOptionUnion'
+import { GameExtended } from '@/types/types'
+import FilterAPI from '@/lib/ui/api-client/filter'
 
 type ComponentProps = {
   genres: Genre[]
   tags: Tag[]
   parentPlatforms: ParentPlatform[]
   esrbRatings: EsrbRating[]
+  setFilteredGames: Dispatch<SetStateAction<GameExtended[]>>
 }
 
-const Filter = ({ genres, tags, parentPlatforms, esrbRatings }: ComponentProps) => {
+const Filter = ({
+  genres,
+  tags,
+  parentPlatforms,
+  esrbRatings,
+  setFilteredGames
+}: ComponentProps) => {
   const [filterOptions, setFilterOptions] = useState<FilterOptionType[]>(
     getInitialFilterOptions(genres, tags, parentPlatforms, esrbRatings)
   )
@@ -89,7 +98,7 @@ const Filter = ({ genres, tags, parentPlatforms, esrbRatings }: ComponentProps) 
     )
   }
 
-  const hanleSubmit = () => {
+  const hanleSubmit = async () => {
     const optionsToSend = filterOptions
       .filter((option) => option.options.some((el) => el.value !== null))
       .map((option) => ({
@@ -97,7 +106,8 @@ const Filter = ({ genres, tags, parentPlatforms, esrbRatings }: ComponentProps) 
         options: option.options.filter((el) => el.value !== null)
       }))
 
-    console.log('optionsToSend', optionsToSend)
+    const res = await FilterAPI.filter(optionsToSend)
+    setFilteredGames(res.data.filteredGames)
   }
 
   return (

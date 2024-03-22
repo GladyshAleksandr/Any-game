@@ -17,7 +17,8 @@ type ComponentProps = {
 }
 
 const Home = ({ games, genres, tags, parentPlatforms, esrbRatings }: ComponentProps) => {
-  const [page, setPage] = useState<number>(1)
+  const [page, setPage] = useState<number>(1) // TODO paginator for filtered
+  const [filteredGames, setFilteredGames] = useState(games)
 
   return (
     <div>
@@ -26,8 +27,9 @@ const Home = ({ games, genres, tags, parentPlatforms, esrbRatings }: ComponentPr
         tags={tags}
         parentPlatforms={parentPlatforms}
         esrbRatings={esrbRatings}
+        setFilteredGames={setFilteredGames}
       />
-      <GameCards games={games} />
+      <GameCards games={filteredGames} />
     </div>
   )
 }

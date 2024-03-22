@@ -50,7 +50,7 @@ const CustomSlider = ({ type, options, handleSlider }: ComponentProps) => {
 
     return sliderOpt
   }
-
+  console.log('options', options)
   return (
     <>
       {type === OptionType.ReleaseYear && (
