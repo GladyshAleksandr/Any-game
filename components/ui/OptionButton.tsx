@@ -10,7 +10,7 @@ type ComponentProps = {
 
 const OptionButton = ({ children, className, isSeachField, onClick, onChange }: ComponentProps) => {
   const commonClassNames =
-    'flex justify-center items-center w-48 h-14 bg-[#1b1b1b] rounded-xl outline-none'
+    'flex justify-center items-center w-48 h-12 bg-[#1b1b1b] rounded-xl outline-none'
   return (
     <>
       {!isSeachField ? (

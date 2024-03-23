@@ -51,7 +51,9 @@ const FilterSubOption = ({
       }}
     >
       {isCheckBox(type) ? (
-        <div className={classNames('grid w-48', options.length > 20 && 'grid-cols-3 w-[594px]')}>
+        <div
+          className={classNames('grid w-48 py-2', options.length > 20 && 'grid-cols-3 w-[594px]')}
+        >
           {options.map((option) => (
             <div
               className="p-4 h-8 flex justify-start items-center space-x-2"

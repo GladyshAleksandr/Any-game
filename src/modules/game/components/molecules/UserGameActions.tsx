@@ -1,6 +1,7 @@
 import handleRedirectResponse from '@/lib/backend/utils/handleRedirectResponse'
 import UserGameStatusAPI from '@/lib/ui/api-client/user_game_status'
 import { GameStatus, UserGameStatus } from '@prisma/client'
+import OptionButton from 'components/ui/OptionButton'
 import { Dispatch, SetStateAction } from 'react'
 
 type ComponentProps = {
@@ -54,26 +55,11 @@ const UserGameActions = ({
     }
   }
   return (
-    // <div className="flex flex-col mt-4 space-y-2">
-    //   {userGameActions.map((el, index) => (
-    //     <div
-    //       key={index}
-    //       onClick={() => handleOnClick(el.value)}
-    //       className="w-40 h-10 flex items-center justify-center border-2 rounded-lg cursor-pointer "
-    //     >
-    //       {text(el.value)}
-    //     </div>
-    //   ))}
-    // </div>
     <div className="grid grid-cols-2 mt-4 gap-4">
       {userGameActions.map((el, index) => (
-        <div
-          key={index}
-          onClick={() => handleOnClick(el.value)}
-          className="w-36 h-10 flex items-center justify-center border-2 rounded-lg cursor-pointer "
-        >
+        <OptionButton key={index} className="border-2" onClick={() => handleOnClick(el.value)}>
           {text(el.value)}
-        </div>
+        </OptionButton>
       ))}
     </div>
   )

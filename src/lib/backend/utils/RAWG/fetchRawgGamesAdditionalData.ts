@@ -19,7 +19,10 @@ const addGamesDescription = async (games: GameFromRawg[]) => {
       const gameDetails = await axios.get(
         `https://api.rawg.io/api/games/${game.id}?key=${process.env.RAWG_API_KEY}`
       )
-      return { ...game, description_raw: gameDetails.data.description_raw } as GameWithDescription
+      return {
+        ...game,
+        description_raw: JSON.stringify(gameDetails.data.description_raw)
+      } as GameWithDescription
     })
   )
 

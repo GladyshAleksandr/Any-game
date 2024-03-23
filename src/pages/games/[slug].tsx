@@ -40,9 +40,6 @@ const Game = ({ game, user }: ComponentProps) => {
 
   // TODO improove carousel UI 4
 
-  const text =
-    "The year is 2021, and Genoq has become a leading corporation in bio-medical research. However the tower, some 90 stories high, is not all that it seems. Somewhere within the tower, highly illegal bio-weapons research has been conducted in secret. June 26th, disaster strikes and the lethal organic weapons have escaped and threaten not only the staff members stranded in the tower, but the world itself. <br/><br/>You arrive on the 80th floor with an urgent package addressed to Derrida, the lead scientist at Genoq working on the bio-weapons research. Set back from your goal, you must climb the tower, assisting those in need or focusing solely on your task at hand, and stopping the virus from escaping the tower and threatening all life on the planet.<br/><br/>Will you help the stranded survivors or hinder them? Can you deliver the package to Derrida in time? Can you prevent the impending catastrophe and escape with your life?<br/><br/>Key Features<br/><ul><li> New high res graphics<br/></li><li> New music by Mark 'TDK' Knight<br/></li><li> New control menu<br/></li><li> Can save at any point in the game<br/></li><li> Leaderboards<br/></li><li> Achievements<br/></li><li> Same great gameplay</li></ul>"
-
   return (
     <div>
       <div className="grid md:grid-cols-2 xl:grid-cols-3 md:h-full xl:h-[400px] gap-6">
@@ -82,7 +79,9 @@ const Game = ({ game, user }: ComponentProps) => {
           )}
         >
           <p className="text-xl font-extrabold">{game.name}</p>
-          <div dangerouslySetInnerHTML={{ __html: text }} />
+          <pre className="text-base font-sans" style={{ whiteSpace: 'pre-wrap' }}>
+            {JSON.parse(game.description || '')}
+          </pre>
         </div>
         <GameScreeenshots game={game} setSelectedScreenshot={setSelectedScreenshot} />
       </div>

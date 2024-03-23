@@ -23,9 +23,10 @@ const Home = ({ initialGames }: ComponentProps) => {
       try {
         const res = await HomeAPI.games(page)
         setGames((prevGames) => [...prevGames, ...res.data.games])
-        setIsLoading(false)
       } catch (error) {
         console.error('Error fetching games:', error)
+      } finally {
+        setIsLoading(false)
       }
     }
 

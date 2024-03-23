@@ -18,7 +18,7 @@ async function fetchGames(page: number) {
 export async function fetchAllGames() {
   let allGames: any = []
   let currentPage = 1
-  const numberOfGames = 300
+  const numberOfGames = 1000
   try {
     let nextPageGames = await fetchGames(currentPage)
     while (allGames.length < numberOfGames) {
