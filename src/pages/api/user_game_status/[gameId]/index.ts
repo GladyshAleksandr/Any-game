@@ -28,11 +28,19 @@ const updateUserGameStatus = async (
   req: NextApiRequest & ExtendRequestSession,
   res: NextApiResponse
 ) => {
-  const id = Number(req.query.id)
   const { status } = req.body
+  const gameId = Number(req.query.gameId)
+  const userId = req.session.user.id
+
   try {
     const updatedUserGameStatus = await prisma.userGameStatus.update({
-      where: { id },
+      where: {
+        userId_gameId: {
+          userId: userId,
+          gameId: gameId
+        }
+      },
+
       data: { status }
     })
     return res.status(200).json({ ...updatedUserGameStatus })
@@ -45,10 +53,17 @@ const deleteUserGameStatus = async (
   req: NextApiRequest & ExtendRequestSession,
   res: NextApiResponse
 ) => {
-  const id = Number(req.query.id)
+  const gameId = Number(req.query.gameId)
+  const userId = req.session.user.id
+
   try {
     const deletedUserGameStatus = await prisma.userGameStatus.delete({
-      where: { id }
+      where: {
+        userId_gameId: {
+          userId: userId,
+          gameId: gameId
+        }
+      }
     })
     return res.status(200).json({ deletedUserGameStatus })
   } catch (error: any) {

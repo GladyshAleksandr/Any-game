@@ -1,42 +1,35 @@
 import handleRedirectResponse from '@/lib/backend/utils/handleRedirectResponse'
 import UserGameStatusAPI from '@/lib/ui/api-client/user_game_status'
-import { GameStatus, UserGameStatus } from '@prisma/client'
+import { GameStatus } from '@prisma/client'
 import OptionButton from 'components/ui/OptionButton'
 import { Dispatch, SetStateAction } from 'react'
 
 type ComponentProps = {
   gameId: number
-  currentUserGameAction?: UserGameStatus | null
-  setCurrentUserGameAction: Dispatch<SetStateAction<UserGameStatus | null>>
+  userGameStatus?: GameStatus | null
+  setUserGameStatus: Dispatch<SetStateAction<GameStatus | null>>
 }
 
-const UserGameActions = ({
-  gameId,
-  currentUserGameAction,
-  setCurrentUserGameAction
-}: ComponentProps) => {
+const UserGameActions = ({ gameId, userGameStatus, setUserGameStatus }: ComponentProps) => {
   const userGameActions = Object.values(GameStatus).map((status) => ({
     value: status
   }))
 
   const handleOnClick = async (status: GameStatus) => {
     try {
-      if (!currentUserGameAction?.id) {
+      if (!userGameStatus) {
         const { data } = await UserGameStatusAPI.create(gameId, status)
-        setCurrentUserGameAction(data)
+        setUserGameStatus(data.status)
         return
       }
-      if (currentUserGameAction.status === status) {
-        await UserGameStatusAPI.destroy(currentUserGameAction.id)
-        setCurrentUserGameAction(null)
+      if (userGameStatus === status) {
+        await UserGameStatusAPI.destroy(gameId)
+        setUserGameStatus(null)
         return
       }
-      const { data } = await UserGameStatusAPI.update(currentUserGameAction.id, status)
+      const { data } = await UserGameStatusAPI.update(gameId, status)
 
-      setCurrentUserGameAction((prevState) => ({
-        ...prevState!,
-        status: data.status
-      }))
+      setUserGameStatus(data.status)
     } catch (error: any) {
       handleRedirectResponse(error)
     }

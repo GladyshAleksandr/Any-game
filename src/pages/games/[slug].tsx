@@ -6,17 +6,19 @@ import GameScreeenshots from '@/modules/game/components/molecules/GameScreenshot
 import UserGameActions from '@/modules/game/components/molecules/UserGameActions'
 import Carousel from '@/modules/game/components/organisms/Carousel'
 import { GameExtended } from '@/types/types'
-import { UserGameStatus } from '@prisma/client'
+import { GameStatus, Rating, UserGameStatus } from '@prisma/client'
 import { GetServerSidePropsContext } from 'next'
 import { useState } from 'react'
 import styles from '@/styles/scrollbar.module.css'
-import axios from 'axios'
-import { Rating } from 'react-simple-star-rating'
+import { Rating as StarRating } from 'react-simple-star-rating'
 import { Colors } from '@/lib/ui/constants/Colors'
+import rate from '@/lib/ui/api-client/rate'
+import handleRedirectResponse from '@/lib/backend/utils/handleRedirectResponse'
 
 type UserFromDb = {
   id: number
   games: UserGameStatus[]
+  ratings: Rating[]
 }
 
 type ComponentProps = {
@@ -25,18 +27,25 @@ type ComponentProps = {
 }
 const Game = ({ game, user }: ComponentProps) => {
   const [selectedScreenshot, setSelectedScreenshot] = useState<number | null>(null)
-  const [currentUserGameAction, setCurrentUserGameAction] = useState<UserGameStatus | null>(
-    (user && user.games.find((el) => el.gameId === game.id)) || null
+  const [userGameStatus, setUserGameStatus] = useState<GameStatus | null>(
+    (user && user.games.find((el) => el.gameId === game.id))?.status || null
   )
-  const [rating, setRating] = useState(0)
 
-  const handleRating = (rate: number) => {
-    setRating(rate)
+  const initialRating = user.ratings.length > 0 ? user.ratings[0].rating : 0
+  const [rating, setRating] = useState(initialRating)
+
+  const handleRating = async (rating: number) => {
+    try {
+      const res = await rate(rating, game.id)
+      setRating(res.data.ratingRaw.rating)
+    } catch (error) {
+      handleRedirectResponse(error)
+    }
   }
 
-  const onPointerEnter = () => console.log('Enter')
-  const onPointerLeave = () => console.log('Leave')
-  const onPointerMove = (value: number, index: number) => console.log('onPointerMove', value)
+  const onPointerEnter = () => null
+  const onPointerLeave = () => null
+  const onPointerMove = (value: number, index: number) => null
 
   // TODO improove carousel UI 4
 
@@ -51,8 +60,8 @@ const Game = ({ game, user }: ComponentProps) => {
           />
           <div className="flex flex-col items-center mt-4">
             <div className="flex flex-col h-auto">
-              <Rating
-                initialValue={undefined}
+              <StarRating
+                initialValue={rating}
                 onClick={handleRating}
                 onPointerEnter={onPointerEnter}
                 onPointerLeave={onPointerLeave}
@@ -67,14 +76,14 @@ const Game = ({ game, user }: ComponentProps) => {
             </div>
             <UserGameActions
               gameId={game.id}
-              currentUserGameAction={currentUserGameAction}
-              setCurrentUserGameAction={setCurrentUserGameAction}
+              userGameStatus={userGameStatus}
+              setUserGameStatus={setUserGameStatus}
             />
           </div>
         </div>
         <div
           className={classNames(
-            'max-h-[400px] overflow-y-auto xxs:order-3 md:col-span-2 xl:order-2 xl:col-span-1 flex flex-col space-y-2',
+            'max-h-[400px] overflow-y-auto xxs:order-3 md:col-span-2 xl:order-2 xl:col-span-1 flex flex-col space-y-4',
             styles['show-scrollbar']
           )}
         >
@@ -109,12 +118,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     }
   })
 
-  const gameDetails = await axios.get(
-    `https://api.rawg.io/api/games/${1}?key=${process.env.RAWG_API_KEY}`
-  )
-
-  console.log('___gameDetails___', gameDetails)
-
   const authUser = await userFromSessionOrJWT(context)
 
   const user =
@@ -123,15 +126,23 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       where: { id: authUser.id },
       select: {
         id: true,
-        games: true
+        games: true,
+        ratings: {
+          where: {
+            userId: authUser.id,
+            gameId: game?.id
+          }
+        }
       }
     }))
 
   const serializedGame = serializeData(game)
+  const serializedUser = serializeData(user)
+
   return {
     props: {
       game: serializedGame,
-      user
+      user: serializedUser
     }
   }
 }

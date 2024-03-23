@@ -38,10 +38,10 @@ const SignUp = () => {
 
   const onLoginClick = () => router.push('login')
   return (
-    <div>
+    <div className="space-y-4">
       <p className="text-4xl font-extrabold">Sign up</p>
 
-      <div className="my-4">
+      <div>
         <p className="text-xl font-bold">Nice yo see you!</p>
         <p>Start your journey with us</p>
       </div>
@@ -68,7 +68,9 @@ const SignUp = () => {
         <div onClick={onLoginClick} className="text-center text-sm cursor-pointer">
           Don't have an account? Log in
         </div>
-        <div onClick={() => signIn('google')}>Continue with Google</div>
+        <div className="cursor-pointer" onClick={() => signIn('google')}>
+          Continue with Google
+        </div>
       </div>
     </div>
   )

@@ -43,10 +43,10 @@ const Login = () => {
 
   const onSignUpClick = () => router.push('signup')
   return (
-    <div>
+    <div className="space-y-4">
       <p className="text-4xl font-extrabold">Log in</p>
 
-      <div className="my-4">
+      <div>
         <p className="text-xl font-bold">Welcome back!</p>
         <p>Continue your journey with us</p>
       </div>

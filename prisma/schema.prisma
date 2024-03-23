@@ -50,6 +50,9 @@ model Rating {
   userId      Int
   game        Game      @relation(fields: [gameId], references: [id])
   gameId      Int
+
+  @@unique([userId, gameId])
+
 }
 model Comment {
   id          Int       @id @default(autoincrement())
@@ -61,6 +64,9 @@ model Comment {
   userId      Int
   game        Game      @relation(fields: [gameId], references: [id])
   gameId      Int
+
+  @@unique([userId, gameId])
+
 }
 model CommentAction {
   id          Int           @id @default(autoincrement())
@@ -71,6 +77,9 @@ model CommentAction {
   user        User          @relation(fields: [userId], references: [id])
   commentId   Int
   comment     Comment       @relation(fields: [commentId], references: [id])
+
+  @@unique([userId, commentId])
+
 }
 
 enum CommentActionType {
@@ -93,6 +102,9 @@ model UserGameStatus {
   gameId      Int
   game        Game          @relation(fields: [gameId], references: [id])
   status      GameStatus
+
+  @@unique([userId, gameId])
+
 }
 
 // model Playlist {

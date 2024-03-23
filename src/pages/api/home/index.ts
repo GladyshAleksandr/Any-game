@@ -16,10 +16,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 const Games = async (req: NextApiRequest, res: NextApiResponse) => {
   const page = Number(req.query.page)
 
-  console.log('Page', page)
-  const games = await getGames(page)
-
   try {
+    const games = await getGames(page)
     return res.status(200).json({ games })
   } catch (error: any) {
     return res.status(500).json({ message: error.message })
