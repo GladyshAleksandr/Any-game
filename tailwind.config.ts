@@ -7,6 +7,10 @@ const config: Config = {
       colors: {
         darkGold: '#B59410'
       },
+      maxHeight: {
+        '100': '400px'
+      },
+
       textColor: {
         DEFAULT: 'white'
       },

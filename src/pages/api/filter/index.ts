@@ -48,6 +48,7 @@ const GamesByFilter = async (req: NextApiRequest, res: NextApiResponse) => {
   const rating = data.find((el) => el.type === OptionType.Rating)
 
   const AdultRating = data.filter((el) => el.type === OptionType.AdultRating)
+  const adultRatingSlugs = filterIncludedCheckBoxes(AdultRating)
   const status = data.find((el) => el.type === OptionType.Status)
 
   try {
@@ -122,14 +123,10 @@ const GamesByFilter = async (req: NextApiRequest, res: NextApiResponse) => {
           },
           {
             esrbRating:
-              AdultRating.length > 0
+              adultRatingSlugs.length > 0
                 ? {
                     slug: {
-                      in: genres.flatMap((item) =>
-                        item.options
-                          .filter((option) => option.value === true)
-                          .map((option) => option.slug)
-                      )
+                      in: adultRatingSlugs
                     }
                   }
                 : {}

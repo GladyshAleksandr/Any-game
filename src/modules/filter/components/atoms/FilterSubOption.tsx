@@ -6,6 +6,7 @@ import CustomSlider from '../molecules/CustomSlider'
 import { OptionType, Option } from '@/lib/backend/types/FilterOption'
 import { useRef, useEffect } from 'react'
 import { isCheckBox, isIncludeExcludeCheckBox, isSlider } from '../../utils/filterOptionUnion'
+import styles from '@/styles/scrollbar.module.css'
 
 type ComponentProps = {
   isOpen: boolean
@@ -16,7 +17,7 @@ type ComponentProps = {
   handleSlider: (type: OptionType, value: [number, number]) => void
 }
 
-const FilterSubOption = ({
+const FilterSubOptions = ({
   isOpen,
   type,
   options,
@@ -42,37 +43,41 @@ const FilterSubOption = ({
     }
   }, [isOpen])
 
+  const widerSubOption = isSlider(type) || type === OptionType.Tags
+
   return (
     <div
-      className="absolute z-10 top-12 left-0 mt-4 rounded-xl bg-[#1b1b1b]"
+      className={classNames(
+        'absolute z-10 top-12 left-0 mt-4 rounded-xl bg-[#1b1b1b] max-h-100 overflow-y-auto',
+        styles['show-scrollbar'],
+        widerSubOption ? 'grid-cols-3 w-80' : 'w-full' //TODO Pos for slider
+      )}
       ref={menuRef}
       onClick={(event) => {
         event.stopPropagation()
       }}
     >
       {isCheckBox(type) ? (
-        <div
-          className={classNames('grid w-48 py-2', options.length > 20 && 'grid-cols-3 w-[594px]')}
-        >
+        <div className={classNames('grid py-2', type === OptionType.Tags && 'xl:grid-cols-3')}>
           {options.map((option) => (
             <div
-              className="p-4 h-8 flex justify-start items-center space-x-2"
+              className="h-8 space-x-1 px-2 overflow-x-hidden flex justify-start items-center"
               key={option.name}
               onClick={() => handleToggleCheckBox(type, option.slug)}
             >
               {option.value === true ? (
-                <CheckboxPlus className="w-4 text-white" />
+                <CheckboxPlus className="w-4 h-4" />
               ) : option.value === false && isIncludeExcludeCheckBox(type) ? (
-                <CheckboxMinus className="w-4" />
+                <CheckboxMinus className="w-4 h-4" />
               ) : (
-                <CheckboxEmpty className="w-4" />
+                <CheckboxEmpty className="w-4 h-4" />
               )}
-              <p className="max-w-[120px] truncate text-sm">{option.name}</p>
+              <p className="w-[calc(100%-1rem)] truncate text-sm">{option.name}</p>
             </div>
           ))}
         </div>
       ) : isSlider(type) ? (
-        <div className={classNames('p-8', type === OptionType.Rating ? 'w-[394px]' : 'w-[594px]')}>
+        <div className={classNames('p-8')}>
           <CustomSlider type={type} handleSlider={handleSlider} options={options} />
         </div>
       ) : (
@@ -82,4 +87,4 @@ const FilterSubOption = ({
   )
 }
 
-export default FilterSubOption
+export default FilterSubOptions

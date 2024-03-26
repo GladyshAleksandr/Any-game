@@ -31,7 +31,7 @@ const Game = ({ game, user }: ComponentProps) => {
     (user && user.games.find((el) => el.gameId === game.id))?.status || null
   )
 
-  const initialRating = user.ratings.length > 0 ? user.ratings[0].rating : 0
+  const initialRating = user.ratings.length > 0 ? user.ratings[0].rating : 0 //TODO metactitic
   const [rating, setRating] = useState(initialRating)
 
   const handleRating = async (rating: number) => {
@@ -47,7 +47,12 @@ const Game = ({ game, user }: ComponentProps) => {
   const onPointerLeave = () => null
   const onPointerMove = (value: number, index: number) => null
 
-  // TODO improove carousel UI 4
+  // TODO Comments
+  // TODO Comments Replies
+
+  // TODO Comments UI improovements & pc_requirements
+
+  // TODO Improove Carousel UI 4
 
   return (
     <div>

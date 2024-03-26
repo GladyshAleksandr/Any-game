@@ -68,13 +68,12 @@ const getInitialFilterOptions = (
 export const getSliderData = () => {
   const currentYear = new Date().getFullYear()
   const startDecade = 1980
-  const endDecade = Math.ceil(currentYear / 5) * 5
 
   const defaultValue = {
     rating: [0, 10],
-    year: [startDecade, endDecade]
+    year: [startDecade, currentYear]
   }
-  return { currentYear, startDecade, endDecade, defaultValue }
+  return { currentYear, startDecade, defaultValue }
 }
 
 export default getInitialFilterOptions

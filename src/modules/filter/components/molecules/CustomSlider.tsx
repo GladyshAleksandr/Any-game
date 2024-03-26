@@ -20,11 +20,15 @@ const CustomSlider = ({ type, options, handleSlider }: ComponentProps) => {
       } = {
         marks: {},
         min: getSliderData().startDecade,
-        max: getSliderData().endDecade
+        max: getSliderData().currentYear
       }
 
-      for (let year = getSliderData().startDecade; year <= getSliderData().endDecade; year += 5) {
-        sliderOpt.marks[year] = `${year}s`
+      for (
+        let year = getSliderData().startDecade;
+        year <= getSliderData().currentYear;
+        year += 10
+      ) {
+        sliderOpt.marks[year] = `${year}`
       }
 
       return sliderOpt

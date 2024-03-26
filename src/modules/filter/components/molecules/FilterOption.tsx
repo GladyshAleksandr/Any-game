@@ -1,7 +1,8 @@
 import { FilterOptionType, OptionType } from '@/lib/backend/types/FilterOption'
-import FilterSubOption from '../atoms/FilterSubOption'
+import FilterSubOptions from '../atoms/FilterSubOption'
 import { isSearchField } from '../../utils/filterOptionUnion'
 import OptionButton from 'components/ui/OptionButton'
+import Collapse from '@icons/Collapse.svg'
 
 type ComponentProps = {
   handleToggleOption: (type?: OptionType) => void
@@ -21,25 +22,30 @@ const FilterOption = ({
   handleSlider
 }: ComponentProps & FilterOptionType) => {
   return (
-    <div>
+    <div className="w-full">
       {isSearchField(type) ? (
         <OptionButton
           isSeachField
           onChange={(event) => handleSearchField(type, event.target.value)}
+          className="w-full"
         >
           {text}
         </OptionButton>
       ) : (
         <OptionButton
-          className="relative"
+          className="relative w-full"
           onClick={(event) => {
             event.stopPropagation()
             handleToggleOption(type)
           }}
         >
-          {text}
+          <div className="w-full px-4 flex justify-between items-center">
+            {text}
+
+            <Collapse className="w-4 h-4" />
+          </div>
           {isOpen && (
-            <FilterSubOption
+            <FilterSubOptions
               isOpen={isOpen}
               type={type}
               options={options}

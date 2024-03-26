@@ -116,20 +116,19 @@ const Filter = ({
         Choose multiple options to find what you want! Include or exclude: genres, tags, and
         platforms.
       </p>
-      <div className="grid grid-cols-4 gap-2 justify-items-center">
+      <div className="w-full grid xs:grid-cols-2 md:grid-cols-4 xl:flex gap-2 justify-items-center">
         {filterOptions.map((el) => (
-          <div key={el.text}>
-            <FilterOption
-              text={el.text}
-              isOpen={el.isOpen}
-              type={el.type}
-              options={el.options}
-              handleToggleOption={handleToggleOption}
-              handleToggleCheckBox={handleToggleCheckBox}
-              handleSearchField={handleSearchField}
-              handleSlider={handleSlider}
-            />
-          </div>
+          <FilterOption
+            key={el.text}
+            text={el.text}
+            isOpen={el.isOpen}
+            type={el.type}
+            options={el.options}
+            handleToggleOption={handleToggleOption}
+            handleToggleCheckBox={handleToggleCheckBox}
+            handleSearchField={handleSearchField}
+            handleSlider={handleSlider}
+          />
         ))}
       </div>
       <div

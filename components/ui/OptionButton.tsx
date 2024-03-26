@@ -23,7 +23,11 @@ const OptionButton = ({ children, className, isSeachField, onClick, onChange }: 
       ) : (
         <input
           type="text"
-          className={classNames(commonClassNames, 'text-center cursor-text')}
+          className={classNames(
+            commonClassNames,
+            'text-center cursor-text',
+            className ? className : ''
+          )}
           placeholder={children?.toString()}
           onChange={onChange}
         ></input>
