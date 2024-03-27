@@ -54,38 +54,37 @@ model Rating {
   @@unique([userId, gameId])
 
 }
-model Comment {
-  id          Int       @id @default(autoincrement())
-  content     String
-  createdAt   DateTime  @default(now())
-  commentAction   CommentAction[]
 
-  user        User      @relation(fields: [userId], references: [id])
-  userId      Int
-  game        Game      @relation(fields: [gameId], references: [id])
-  gameId      Int
+model Comment {
+  id                  Int       @id @default(autoincrement())
+  createdAt           DateTime  @default(now())
+  content             String
+
+  user                User      @relation(fields: [userId], references: [id])
+  userId              Int
+  game                Game      @relation(fields: [gameId], references: [id])
+  gameId              Int
+  commentActions      CommentAction[]
+  repliedTo           Comment?   @relation("Replies", fields: [repliedToId], references: [id])
+  repliedToId         Int?
+  replies             Comment[]  @relation("Replies")
 
   @@unique([userId, gameId])
 
 }
-model CommentAction {
-  id          Int           @id @default(autoincrement())
-  type        CommentActionType
-  createdAt   DateTime      @default(now())
 
-  userId      Int
-  user        User          @relation(fields: [userId], references: [id])
-  commentId   Int
-  comment     Comment       @relation(fields: [commentId], references: [id])
+
+model CommentAction {
+  id                  Int         @id @default(autoincrement())
+  createdAt           DateTime    @default(now())
+  isLike              Boolean
+  user                User        @relation(fields: [userId], references: [id])
+  userId              Int
+  comment             Comment     @relation(fields: [commentId], references: [id])
+  commentId           Int
 
   @@unique([userId, commentId])
 
-}
-
-enum CommentActionType {
-  LIKE
-  DISLIKE
-  REPLY
 }
 
 enum GameStatus {
@@ -129,7 +128,7 @@ model User {
 
   ratings             Rating[]
   comments            Comment[]
-  commentAction       CommentAction[]
+  commentActions      CommentAction[]
   games               UserGameStatus[]
  
 }
