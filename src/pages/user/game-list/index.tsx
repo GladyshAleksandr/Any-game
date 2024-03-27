@@ -18,6 +18,9 @@ const GameList = ({ user }: ComponentProps) => {
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const user = await userFromSessionOrJWT(context)
+
+  if (!user) return { redirect: { permanent: false, destination: '/auth/login' } }
+
   const mUser = await prisma.user.findUnique({ where: { id: user.id } })
 
   return {

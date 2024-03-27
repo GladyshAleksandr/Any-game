@@ -35,6 +35,7 @@
     "@types/bcrypt": "^5.0.2",
     "@types/jsonwebtoken": "^9.0.6",
     "@types/lodash.debounce": "^4.0.9",
+    "emoji-picker-react": "^4.9.2",
     "lodash.debounce": "^4.0.8",
     "prettier": "^3.1.1",
     "prisma": "^5.9.1",

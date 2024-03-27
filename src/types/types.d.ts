@@ -5,4 +5,5 @@ export type GameExtended = Game & {
   parentPlatforms: ParentPlatform[]
   genres: Genre[]
   tags: Tag[]
+  comments: Comment[]
 }

@@ -14,6 +14,7 @@ import { Rating as StarRating } from 'react-simple-star-rating'
 import { Colors } from '@/lib/ui/constants/Colors'
 import rate from '@/lib/ui/api-client/rate'
 import handleRedirectResponse from '@/lib/backend/utils/handleRedirectResponse'
+import CommentInput from '@/modules/game/components/molecules/CommentInput'
 
 type UserFromDb = {
   id: number
@@ -31,7 +32,7 @@ const Game = ({ game, user }: ComponentProps) => {
     (user && user.games.find((el) => el.gameId === game.id))?.status || null
   )
 
-  const initialRating = user.ratings.length > 0 ? user.ratings[0].rating : 0 //TODO metactitic
+  const initialRating = user ? (user.ratings.length > 0 ? user.ratings[0].rating : 0) : 0 //TODO metactitic
   const [rating, setRating] = useState(initialRating)
 
   const handleRating = async (rating: number) => {
@@ -99,6 +100,13 @@ const Game = ({ game, user }: ComponentProps) => {
         </div>
         <GameScreeenshots game={game} setSelectedScreenshot={setSelectedScreenshot} />
       </div>
+      <div className="mt-20">
+        <div>
+          <p>{game.comments?.length} Comments</p>
+          <div className="mt-2 border-t-2"></div>
+          <CommentInput />
+        </div>
+      </div>
 
       <Carousel
         game={game}
@@ -119,7 +127,8 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       esrbRating: true,
       parentPlatforms: true,
       genres: true,
-      tags: true
+      tags: true,
+      comments: true
     }
   })
 

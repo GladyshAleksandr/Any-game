@@ -3,10 +3,7 @@ import { GetServerSidePropsContext } from 'next'
 import { getSession } from 'next-auth/react'
 import jwt from 'jsonwebtoken'
 
-export const userFromSessionOrJWT = async (
-  context: GetServerSidePropsContext,
-  isAuthRequired?: boolean
-): Promise<any> => {
+export const userFromSessionOrJWT = async (context: GetServerSidePropsContext) => {
   const select = { id: true, username: true, email: true, name: true, profileImage: true }
 
   const session = await getSession(context)
@@ -27,10 +24,6 @@ export const userFromSessionOrJWT = async (
       where: { email: email },
       select
     })
-  }
-
-  if (isAuthRequired && !user) {
-    return { redirect: { permanent: false, destination: 'auth/login' } }
   }
 
   return user
