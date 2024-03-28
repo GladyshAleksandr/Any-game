@@ -6,7 +6,7 @@ const create = async (gameId: number, comment: string, repliedToId?: number) =>
 const edit = async (id: number, comment: string) => axios.patch(`/api/comment/${id}`, { comment })
 const remove = async (id: number) => axios.delete(`/api/comment/${id}`)
 
-const action = async (id: number, isLike: boolean) =>
+const action = async (id: number, isLike: boolean | null) =>
   axios.post(`/api/comment/${id}/action`, { isLike })
 
 const CommentAPI = {

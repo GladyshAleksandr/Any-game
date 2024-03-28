@@ -14,7 +14,7 @@ import { Rating as StarRating } from 'react-simple-star-rating'
 import { Colors } from '@/lib/ui/constants/Colors'
 import rate from '@/lib/ui/api-client/rate'
 import handleRedirectResponse from '@/lib/backend/utils/handleRedirectResponse'
-import CommentInput from '@/modules/game/components/molecules/CommentInput'
+import CommentsSection from '@/modules/game/components/molecules/CommentsSection'
 
 type UserFromDb = {
   id: number
@@ -47,9 +47,6 @@ const Game = ({ game, user }: ComponentProps) => {
   const onPointerEnter = () => null
   const onPointerLeave = () => null
   const onPointerMove = (value: number, index: number) => null
-
-  // TODO Comments
-  // TODO Comments Replies
 
   // TODO Comments UI improovements & pc_requirements
 
@@ -100,13 +97,7 @@ const Game = ({ game, user }: ComponentProps) => {
         </div>
         <GameScreeenshots game={game} setSelectedScreenshot={setSelectedScreenshot} />
       </div>
-      <div className="mt-20">
-        <div>
-          <p>{game.comments?.length} Comments</p>
-          <div className="mt-2 border-t-2"></div>
-          <CommentInput />
-        </div>
-      </div>
+      <CommentsSection userId={user?.id} gameId={game.id} gameComments={game.comments} />
 
       <Carousel
         game={game}
@@ -128,7 +119,13 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       parentPlatforms: true,
       genres: true,
       tags: true,
-      comments: true
+      comments: {
+        include: {
+          user: true,
+          commentActions: true,
+          replies: true
+        }
+      }
     }
   })
 

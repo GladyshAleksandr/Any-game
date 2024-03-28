@@ -69,8 +69,6 @@ model Comment {
   repliedToId         Int?
   replies             Comment[]  @relation("Replies")
 
-  @@unique([userId, gameId])
-
 }
 
 

@@ -35,6 +35,11 @@ const create = async (req: NextApiRequest & ExtendRequestSession, res: NextApiRe
           userId: userId,
           content: comment,
           repliedToId: repliedToId
+        },
+        include: {
+          user: true,
+          commentActions: true,
+          replies: true
         }
       })
       return res.status(200).json({ ...createdReply })
@@ -45,6 +50,11 @@ const create = async (req: NextApiRequest & ExtendRequestSession, res: NextApiRe
         gameId: gameId,
         userId: userId,
         content: comment
+      },
+      include: {
+        user: true,
+        commentActions: true,
+        replies: true
       }
     })
     return res.status(200).json({ ...createdComment })

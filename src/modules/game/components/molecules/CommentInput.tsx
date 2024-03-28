@@ -1,7 +1,19 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, Dispatch, SetStateAction } from 'react'
 import EmojiPicker from 'emoji-picker-react'
+import CommentAPI from '@/lib/ui/api-client/comment'
+import { CommentExtended } from '@/types/types'
+import { useRouter } from 'next/router'
 
-const CommentInput = () => {
+type ComponentProps = {
+  gameId: number
+  repliedToId?: number
+  userId: number | undefined
+  setComments: Dispatch<SetStateAction<CommentExtended[]>>
+}
+
+const CommentInput = ({ gameId, repliedToId, userId, setComments }: ComponentProps) => {
+  const router = useRouter()
+
   const [comment, setComment] = useState('')
   const [showEmojiPicker, setShowEmojiPicker] = useState(false)
   const textAreaRef = useRef(null)
@@ -31,7 +43,19 @@ const CommentInput = () => {
     applyTextFormatting('[Link](https://example.com)')
   }
 
-  const handleCommentClick = () => {}
+  const handleSubmitComment = async () => {
+    try {
+      const res = await CommentAPI.create(gameId, comment, repliedToId)
+      console.log('res', res)
+      setComments((prevState) =>
+        res.data.repliedToId
+          ? prevState.map((comment) => ({ ...comment, replies: [...comment.replies, res.data] }))
+          : [res.data, ...prevState]
+      )
+    } catch (error) {
+      console.error(error)
+    }
+  }
 
   const applyTextFormatting = (startTag: string, endTag = '') => {
     const textArea = textAreaRef.current as any
@@ -48,13 +72,18 @@ const CommentInput = () => {
     )
   }
 
+  const handleInputClick = () => {
+    if (!userId) router.push('/auth/login')
+  }
+
   return (
     <div className="mt-4 bg-white rounded-lg border ">
       <textarea
         ref={textAreaRef}
-        className="w-full h-24 p-4 rounded resize-none border-none outline-none"
+        className="w-full h-24 p-4 rounded resize-none border-none outline-none text-black"
         placeholder="Write your comment..."
         value={comment}
+        onClick={handleInputClick}
         onChange={(e) => setComment(e.target.value)}
       ></textarea>
       <div className="flex justify-between items-center p-2 border-t-2 border-[#acb2b6] text-[#acb2b6] font-semibold">
@@ -77,7 +106,7 @@ const CommentInput = () => {
         </div>
         <button
           className="bg-red-500 rounded-full p-2 text-white ml-10"
-          onClick={handleCommentClick}
+          onClick={handleSubmitComment}
         >
           Comment
         </button>

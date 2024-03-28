@@ -26,7 +26,15 @@ const Action = async (req: NextApiRequest & ExtendRequestSession, res: NextApiRe
   const userId = req.session.user.id
 
   try {
-    const like = await prisma.commentAction.upsert({
+    if (isLike === null) {
+      const result = await prisma.commentAction.delete({
+        where: { userId_commentId: { userId: userId, commentId: id } }
+      })
+
+      return res.status(200).json({ ...result })
+    }
+
+    const result = await prisma.commentAction.upsert({
       where: {
         userId_commentId: { userId: userId, commentId: id }
       },
@@ -40,7 +48,7 @@ const Action = async (req: NextApiRequest & ExtendRequestSession, res: NextApiRe
         isLike: isLike
       }
     })
-    return res.status(200).json({ ...like })
+    return res.status(200).json({ ...result })
   } catch (error: any) {
     return res.status(500).json({ message: error.message })
   }
