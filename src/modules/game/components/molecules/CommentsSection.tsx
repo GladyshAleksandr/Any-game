@@ -1,4 +1,4 @@
-import CommentInput from '@/modules/game/components/molecules/CommentInput'
+import CommentInput, { CommentMode } from '@/modules/game/components/molecules/CommentInput'
 import { useState } from 'react'
 import { CommentExtended, GameExtended } from '@/types/types'
 import Comments from './Comments'
@@ -17,7 +17,12 @@ const CommentsSection = ({ gameId, gameComments, userId }: ComponentProps) => {
       <div>
         <p>{comments?.length} Comments</p>
         <div className="mt-2 border-t-2"></div>
-        <CommentInput gameId={gameId} userId={userId} setComments={setComments} />
+        <CommentInput
+          mode={CommentMode.Create}
+          userId={userId}
+          setComments={setComments}
+          gameId={gameId}
+        />
         <div>
           {!comments.length && (
             <div className="mx-auto mt-8 text-xl font-bold">Be the first to live a comment!</div>

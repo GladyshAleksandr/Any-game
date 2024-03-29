@@ -4,9 +4,10 @@ import CheckboxEmpty from '@icons/CheckboxEmpty.svg'
 import classNames from '@/lib/utils/classNames'
 import CustomSlider from '../molecules/CustomSlider'
 import { OptionType, Option } from '@/lib/backend/types/FilterOption'
-import { useRef, useEffect } from 'react'
+import { useRef } from 'react'
 import { isCheckBox, isIncludeExcludeCheckBox, isSlider } from '../../utils/filterOptionUnion'
 import styles from '@/styles/scrollbar.module.css'
+import UseClickOutside from '@/lib/ui/utils/useClickOutside'
 
 type ComponentProps = {
   isOpen: boolean
@@ -27,28 +28,14 @@ const FilterSubOptions = ({
 }: ComponentProps) => {
   const menuRef = useRef<HTMLDivElement>(null)
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-        handleToggleOption()
-      }
-    }
-
-    if (isOpen) {
-      document.addEventListener('click', handleClickOutside)
-    }
-
-    return () => {
-      document.removeEventListener('click', handleClickOutside)
-    }
-  }, [isOpen])
+  UseClickOutside(menuRef, isOpen, () => handleToggleOption())
 
   const widerSubOption = isSlider(type) || type === OptionType.Tags
 
   return (
     <div
       className={classNames(
-        'absolute z-10 top-12 left-0 mt-4 rounded-xl bg-[#1b1b1b] max-h-100 overflow-y-auto',
+        'absolute z-10 top-12 left-0 mt-4 rounded-xl bg-gray max-h-100 overflow-y-auto',
         styles['show-scrollbar'],
         widerSubOption ? 'grid-cols-3 w-80' : 'w-full' //TODO Pos for slider
       )}

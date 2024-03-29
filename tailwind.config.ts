@@ -5,7 +5,8 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        darkGold: '#B59410'
+        darkGold: '#B59410',
+        gray: '#282828'
       },
       maxHeight: {
         '100': '400px'

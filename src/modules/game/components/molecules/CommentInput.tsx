@@ -4,17 +4,44 @@ import CommentAPI from '@/lib/ui/api-client/comment'
 import { CommentExtended } from '@/types/types'
 import { useRouter } from 'next/router'
 
-type ComponentProps = {
-  gameId: number
-  repliedToId?: number
+export enum CommentMode {
+  Create,
+  Reply,
+  Edit
+}
+
+type BaseProps = {
   userId: number | undefined
   setComments: Dispatch<SetStateAction<CommentExtended[]>>
 }
 
-const CommentInput = ({ gameId, repliedToId, userId, setComments }: ComponentProps) => {
+type CreateProps = {
+  mode: CommentMode.Create
+  gameId: number
+} & BaseProps
+
+type ReplyProps = {
+  mode: CommentMode.Reply
+  gameId: number
+  repliedToId: number
+  closeInput: () => void
+} & BaseProps
+
+type EditProps = {
+  mode: CommentMode.Edit
+  commentId: number
+  initialComment: string
+  closeInput: () => void
+} & BaseProps
+
+type ComponentProps = CreateProps | ReplyProps | EditProps
+
+const CommentInput: React.FC<ComponentProps> = (props) => {
   const router = useRouter()
 
-  const [comment, setComment] = useState('')
+  const [comment, setComment] = useState(
+    props.mode === CommentMode.Edit ? props.initialComment : ''
+  )
   const [showEmojiPicker, setShowEmojiPicker] = useState(false)
   const textAreaRef = useRef(null)
 
@@ -45,13 +72,51 @@ const CommentInput = ({ gameId, repliedToId, userId, setComments }: ComponentPro
 
   const handleSubmitComment = async () => {
     try {
-      const res = await CommentAPI.create(gameId, comment, repliedToId)
-      console.log('res', res)
-      setComments((prevState) =>
-        res.data.repliedToId
-          ? prevState.map((comment) => ({ ...comment, replies: [...comment.replies, res.data] }))
-          : [res.data, ...prevState]
-      )
+      switch (props.mode) {
+        case CommentMode.Create:
+          const createdComment = await CommentAPI.create(props.gameId, comment)
+          props.setComments((prevState) => [createdComment.data, ...prevState])
+          break
+
+        case CommentMode.Reply:
+          const createdResponse = await CommentAPI.create(props.gameId, comment, props.repliedToId)
+          props.setComments((prevState) =>
+            prevState.map((comment) =>
+              comment.id === createdResponse.data.repliedToId
+                ? {
+                    ...comment,
+                    replies: [...comment.replies, createdResponse.data]
+                  }
+                : comment
+            )
+          )
+          props.closeInput()
+          break
+
+        case CommentMode.Edit:
+          const editedComment = await CommentAPI.edit(props.commentId, comment)
+          props.setComments((prevState) =>
+            editedComment.data.repliedToId
+              ? prevState.map((comment) => ({
+                  ...comment,
+                  replies: [
+                    ...comment.replies.map((reply) =>
+                      reply.id === editedComment.data.id
+                        ? { ...reply, content: editedComment.data.content }
+                        : reply
+                    )
+                  ]
+                }))
+              : prevState.map((comment) =>
+                  comment.id === editedComment.data.id
+                    ? { ...comment, content: editedComment.data.content }
+                    : comment
+                )
+          )
+          props.closeInput()
+
+          break
+      }
     } catch (error) {
       console.error(error)
     }
@@ -73,7 +138,7 @@ const CommentInput = ({ gameId, repliedToId, userId, setComments }: ComponentPro
   }
 
   const handleInputClick = () => {
-    if (!userId) router.push('/auth/login')
+    if (!props.userId) router.push('/auth/login')
   }
 
   return (

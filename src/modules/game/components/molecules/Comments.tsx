@@ -1,11 +1,7 @@
-import CommentInput from './CommentInput'
-import Like from '@icons/Like.svg'
-import Dislike from '@icons/Dislike.svg'
-import Dots from '@icons/Dots.svg'
 import { CommentExtended } from '@/types/types'
-import { Dispatch, SetStateAction, useState } from 'react'
-import timeAgo from '@/lib/ui/utils/timeAgo'
+import { Dispatch, SetStateAction } from 'react'
 import CommentAPI from '@/lib/ui/api-client/comment'
+import Comment from './Comment'
 
 type ComponentProps = {
   gameId: number
@@ -15,8 +11,6 @@ type ComponentProps = {
 }
 
 const Comments = ({ gameId, comments, userId, setComments }: ComponentProps) => {
-  const [repliedToId, setRepliedToId] = useState<number | null>(null)
-
   const removeLikeOrDislike = async (commentId: number) => {
     const res = await CommentAPI.action(commentId, null)
 
@@ -66,69 +60,37 @@ const Comments = ({ gameId, comments, userId, setComments }: ComponentProps) => 
     } catch (error) {}
   }
 
-  const handleReplyButton = (commentId: number) => {
-    if (repliedToId) setRepliedToId(null)
-    else setRepliedToId(commentId)
-  }
+  const mainComments = comments.filter((comment) => !comment.repliedToId)
+  const replies = comments.filter((comment) => comment.repliedToId)
+
+  console.log('comments', comments)
+
+  console.log('mainComments', mainComments)
+  console.log('replies', replies)
 
   return (
-    <div className="">
-      {comments.map((comment) => (
-        <div key={comment.id} className="flex items-start justify-between mt-4 ">
-          <div className="flex space-x-3">
-            {comment.user.profileImage ? (
-              <img src={comment.user.profileImage} className="rounded-full w-12 h-12"></img>
-            ) : (
-              <div className="">
-                {comment.user.name
-                  ? comment.user.name[0].toLocaleUpperCase()
-                  : comment.user.username[0].toLocaleUpperCase()}
-              </div>
-            )}
-            <div className="flex flex-col space-y-2 text-xs">
-              <p className="font-semibold text-base">
-                {comment.user.name || comment.user.username}
-              </p>
-              <p>{timeAgo(comment.createdAt)}</p>
-              <div className="text-base">{comment.content}</div>
-              <div className="flex justify-center items-center space-x-4 ">
-                <div className="flex justify-center items-center space-x-2">
-                  <Like
-                    className="w-5 cursor-pointer"
-                    onClick={() => handleLikeOrDislike(comment.id, true)}
-                  />
-                  <p>{comment.commentActions.filter((el) => el.isLike).length}</p>
-                </div>
-                <div className="flex justify-center items-center space-x-2">
-                  <Dislike
-                    className="w-5 cursor-pointer"
-                    onClick={() => handleLikeOrDislike(comment.id, false)}
-                  />
-                  <p>{comment.commentActions.filter((el) => !el.isLike).length}</p>
-                </div>
-
-                <p className="cursor-pointer" onClick={() => handleReplyButton(comment.id)}>
-                  Reply
-                </p>
-              </div>
-              {repliedToId && (
-                <CommentInput
-                  gameId={gameId}
-                  userId={userId}
-                  repliedToId={repliedToId}
-                  setComments={setComments}
-                />
-              )}
-
-              <div>
-                {comment.replies.map((reply) => (
-                  <div></div>
-                ))}
-              </div>
-            </div>
+    <div>
+      {mainComments.map((comment) => (
+        <div key={comment.id}>
+          <Comment
+            comment={comment}
+            gameId={gameId}
+            userId={userId}
+            handleLikeOrDislike={handleLikeOrDislike}
+            setComments={setComments}
+          />
+          <div className="ml-16">
+            {replies.map((reply) => (
+              <Comment
+                key={reply.id}
+                comment={reply}
+                gameId={gameId}
+                userId={userId}
+                handleLikeOrDislike={handleLikeOrDislike}
+                setComments={setComments}
+              />
+            ))}
           </div>
-
-          <Dots className="w-6" />
         </div>
       ))}
     </div>

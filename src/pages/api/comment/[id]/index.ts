@@ -45,7 +45,14 @@ const edit = async (req: NextApiRequest & ExtendRequestSession, res: NextApiResp
 
 const remove = async (req: NextApiRequest & ExtendRequestSession, res: NextApiResponse) => {
   const id = Number(req.query.id)
+
   try {
+    const removedCommentActions = await prisma.commentAction.deleteMany({
+      where: {
+        commentId: id
+      }
+    })
+
     const removedComment = await prisma.comment.delete({
       where: {
         id: id
