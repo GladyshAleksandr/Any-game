@@ -122,8 +122,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       comments: {
         include: {
           user: true,
-          commentActions: true,
-          replies: true
+          commentActions: true
         }
       }
     }

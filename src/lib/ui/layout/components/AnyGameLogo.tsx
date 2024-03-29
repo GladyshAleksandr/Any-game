@@ -1,5 +1,4 @@
 import { useRouter } from 'next/router'
-import { Colors } from '../../constants/Colors'
 
 const AnyGameLogo = () => {
   const router = useRouter()

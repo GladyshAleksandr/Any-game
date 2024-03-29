@@ -1,5 +1,6 @@
 import { CommentExtended } from '@/types/types'
 import { Dispatch, SetStateAction } from 'react'
+import { useRouter } from 'next/router'
 import CommentAPI from '@/lib/ui/api-client/comment'
 import Comment from './Comment'
 
@@ -11,6 +12,8 @@ type ComponentProps = {
 }
 
 const Comments = ({ gameId, comments, userId, setComments }: ComponentProps) => {
+  const router = useRouter()
+
   const removeLikeOrDislike = async (commentId: number) => {
     const res = await CommentAPI.action(commentId, null)
 
@@ -45,6 +48,8 @@ const Comments = ({ gameId, comments, userId, setComments }: ComponentProps) => 
   }
 
   const handleLikeOrDislike = async (commentId: number, isLike: boolean) => {
+    if (!userId) router.push('/auth/login')
+
     const foundComment = comments.find((comment) =>
       comment.commentActions.some(
         (el) => el.commentId === commentId && el.userId === userId && el.isLike === isLike
@@ -62,11 +67,6 @@ const Comments = ({ gameId, comments, userId, setComments }: ComponentProps) => 
 
   const mainComments = comments.filter((comment) => !comment.repliedToId)
   const replies = comments.filter((comment) => comment.repliedToId)
-
-  console.log('comments', comments)
-
-  console.log('mainComments', mainComments)
-  console.log('replies', replies)
 
   return (
     <div>

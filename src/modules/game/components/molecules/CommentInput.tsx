@@ -80,39 +80,21 @@ const CommentInput: React.FC<ComponentProps> = (props) => {
 
         case CommentMode.Reply:
           const createdResponse = await CommentAPI.create(props.gameId, comment, props.repliedToId)
-          props.setComments((prevState) =>
-            prevState.map((comment) =>
-              comment.id === createdResponse.data.repliedToId
-                ? {
-                    ...comment,
-                    replies: [...comment.replies, createdResponse.data]
-                  }
-                : comment
-            )
-          )
+          props.setComments((prevState) => [...prevState, createdResponse.data])
+
           props.closeInput()
           break
 
         case CommentMode.Edit:
           const editedComment = await CommentAPI.edit(props.commentId, comment)
           props.setComments((prevState) =>
-            editedComment.data.repliedToId
-              ? prevState.map((comment) => ({
-                  ...comment,
-                  replies: [
-                    ...comment.replies.map((reply) =>
-                      reply.id === editedComment.data.id
-                        ? { ...reply, content: editedComment.data.content }
-                        : reply
-                    )
-                  ]
-                }))
-              : prevState.map((comment) =>
-                  comment.id === editedComment.data.id
-                    ? { ...comment, content: editedComment.data.content }
-                    : comment
-                )
+            prevState.map((comment) =>
+              comment.id === editedComment.data.id
+                ? { ...comment, content: editedComment.data.content }
+                : comment
+            )
           )
+
           props.closeInput()
 
           break

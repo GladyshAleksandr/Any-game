@@ -7,19 +7,25 @@ const isAuth = async (context: GetServerSidePropsContext) => {
   const session = await getSession(context)
   const user = await userFromSessionOrJWT(context)
 
-  if (!user && context.req.cookies.jwtToken) return false
+  if (session || context.req.cookies.jwtToken) {
+    if (!user && context.req.cookies.jwtToken) return false
 
-  if (!user && session)
-    await prisma.user.create({
-      data: {
-        email: session.user?.email || '',
-        username: (session.user?.name || '').toLowerCase().replace(/\s+/g, '_'),
-        name: session.user?.name,
-        profileImage: session.user?.image
-      }
-    })
+    if (!user && session) {
+      await prisma.user.create({
+        data: {
+          email: session.user?.email || '',
+          username: (session.user?.name || '').toLowerCase().replace(/\s+/g, '_'),
+          name: session.user?.name,
+          profileImage: session.user?.image
+        }
+      })
+      return true
+    }
 
-  return true
+    return true
+  }
+
+  return false
 }
 
 export default isAuth

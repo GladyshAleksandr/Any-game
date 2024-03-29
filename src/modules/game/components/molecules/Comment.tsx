@@ -31,28 +31,20 @@ const Comment = ({ comment, gameId, userId, handleLikeOrDislike, setComments }: 
     else setRepliedToId(comment.id)
   }
 
-  const handleEditButton = async () => {
-    setShowOptions(false)
+  const handleEditButton = () => {
     setEditComment(true)
+
+    setShowOptions(false)
   }
 
   const handleRemovetButton = async () => {
     setShowOptions(false)
     const res = await CommentAPI.remove(comment.id)
 
-    setComments((prevState) =>
-      res.data.repliedToId
-        ? prevState.map((comment) => ({
-            ...comment,
-            replies: [...comment.replies.filter((reply) => reply.id !== res.data.id)]
-          }))
-        : prevState.filter((comment) => comment.id !== res.data.id)
-    )
+    setComments((prevState) => prevState.filter((comment) => comment.id !== res.data.id))
   }
 
   UseClickOutside(menuRef, showOptions, () => setShowOptions(false))
-
-  console.log('editComment', editComment)
 
   return (
     <div key={comment.id} className="mt-6">
@@ -93,13 +85,13 @@ const Comment = ({ comment, gameId, userId, handleLikeOrDislike, setComments }: 
                   setComments={setComments}
                   gameId={gameId}
                   repliedToId={repliedToId}
-                  closeInput={() => setEditComment(false)}
+                  closeInput={handleReplyButton}
                 />
               )}
             </div>
           </div>
 
-          <div ref={menuRef}>
+          <div ref={menuRef} className={userId ? '' : 'hidden'}>
             <Dots
               className="w-6 cursor-pointer"
               onClick={() => setShowOptions((prevState) => !prevState)}
