@@ -1,10 +1,15 @@
 import Footer from './Footer'
-import Header from './Header'
+import Header, { HeaderOptionsType } from './Header'
 
-const Layout = ({ children }: any) => {
+type ComponentProps = {
+  children: any
+  data: HeaderOptionsType
+}
+
+const Layout = ({ children, data }: ComponentProps) => {
   return (
     <div className="">
-      <Header />
+      <Header data={data} />
       {children}
       <Footer />
     </div>

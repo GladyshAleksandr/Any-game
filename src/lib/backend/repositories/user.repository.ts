@@ -3,7 +3,9 @@ import { GetServerSidePropsContext } from 'next'
 import { getSession } from 'next-auth/react'
 import jwt from 'jsonwebtoken'
 
-export const userFromSessionOrJWT = async (context: GetServerSidePropsContext) => {
+export const userFromSessionOrJWT = async (
+  context: GetServerSidePropsContext
+): Promise<SessionJwtUserType | null> => {
   const select = { id: true, username: true, email: true, name: true, profileImage: true }
 
   const session = await getSession(context)
@@ -29,15 +31,7 @@ export const userFromSessionOrJWT = async (context: GetServerSidePropsContext) =
   return user
 }
 
-type UserFromSessionOrJWT = {
-  id: number
-  username: string
-  email: string
-  name: string
-  profileImage: string
-}
-
-export type UserData = {
+export type SessionJwtUserType = {
   id: number
   username: string
   email: string
