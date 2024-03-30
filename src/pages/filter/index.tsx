@@ -16,7 +16,7 @@ type ComponentProps = {
   esrbRatings: EsrbRating[]
 }
 
-const Home = ({ games, genres, tags, parentPlatforms, esrbRatings }: ComponentProps) => {
+const Advanced = ({ games, genres, tags, parentPlatforms, esrbRatings }: ComponentProps) => {
   const [page, setPage] = useState<number>(1) // TODO paginator for filtered
   const [filteredGames, setFilteredGames] = useState(games)
 
@@ -57,4 +57,4 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   }
 }
 
-export default Home
+export default Advanced

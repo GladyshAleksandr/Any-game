@@ -10,6 +10,7 @@ import Delete from '@icons/Delete.svg'
 import UseClickOutside from '@/lib/ui/utils/useClickOutside'
 import CommentAPI from '@/lib/ui/api-client/comment'
 import Avatar from 'components/ui/Avatar'
+import { useRouter } from 'next/router'
 
 type ComponentProps = {
   comment: CommentExtended
@@ -22,11 +23,18 @@ type ComponentProps = {
 const Comment = ({ comment, gameId, userId, handleLikeOrDislike, setComments }: ComponentProps) => {
   const menuRef = useRef<HTMLDivElement>(null)
 
+  const router = useRouter()
+
   const [repliedToId, setRepliedToId] = useState<number | null>(null)
   const [showOptions, setShowOptions] = useState(false)
   const [editComment, setEditComment] = useState(false)
 
   const handleReplyButton = () => {
+    if (!userId) {
+      router.push('/auth/login')
+      return
+    }
+
     if (repliedToId) setRepliedToId(null)
     else setRepliedToId(comment.id)
   }
@@ -91,7 +99,7 @@ const Comment = ({ comment, gameId, userId, handleLikeOrDislike, setComments }: 
             </div>
           </div>
 
-          <div ref={menuRef} className={userId ? '' : 'hidden'}>
+          <div ref={menuRef} className={userId === comment.userId ? '' : 'hidden'}>
             <Dots
               className="w-6 cursor-pointer"
               onClick={() => setShowOptions((prevState) => !prevState)}

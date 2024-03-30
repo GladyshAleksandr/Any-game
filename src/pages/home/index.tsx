@@ -4,10 +4,10 @@ import HomeAPI from '@/lib/ui/api-client/home'
 import GameCards from '@/modules/home/components/molecules/GameCards'
 import SearchGames from '@/modules/home/components/molecules/SearchGames'
 import { GameExtended } from '@/types/types'
-import Spinner from 'components/ui/Spinner'
-import { useEffect, useState } from 'react'
-import debounce from 'lodash.debounce'
 import OptionButton from 'components/ui/OptionButton'
+import Spinner from 'components/ui/Spinner'
+import debounce from 'lodash.debounce'
+import { useState, useEffect } from 'react'
 
 type ComponentProps = {
   initialGames: GameExtended[]

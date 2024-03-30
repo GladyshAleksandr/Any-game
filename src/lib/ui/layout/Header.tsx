@@ -1,67 +1,89 @@
 import Profile from '@icons/Profile.svg'
-import Burger from '@icons/Burger.svg'
-import Close from '@icons/Close.svg'
-import SignOut from '@icons/SignOut.svg'
+import GameList from '@icons/GameList.svg'
 import Notification from '@icons/Notification.svg'
+import Burger from '@icons/Burger.svg'
 import AnyGameLogo from './components/AnyGameLogo'
+import SignOut from '@icons/SignOut.svg'
 import { signOut } from 'next-auth/react'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useRouter } from 'next/router'
+import UseClickOutside from '../utils/useClickOutside'
 
 const Header = () => {
   const router = useRouter()
+
+  const menuRef = useRef<HTMLDivElement>(null)
+
   const [isOpen, setIsOpen] = useState(false)
 
   const handleSignOut = async () => {
     try {
-      await signOut() // Replace 'google' with the name of your OAuth provider
+      await signOut()
     } catch (error) {
       console.error('Error signing in:', error)
-      // Handle any errors that occur during sign-in
+    } finally {
+      handleToggle()
     }
   }
+  const handleProfile = () => {
+    router.push('/user/profile')
+    handleToggle()
+  }
 
-  const handleProfile = () => router.push('/user/profile')
+  const handleGameList = () => {
+    router.push('/user/game-list')
+    handleToggle()
+  }
+
+  const handleNotifications = () => {
+    router.push('/user/notifications')
+    handleToggle()
+  }
 
   const handleToggle = () => {
     setIsOpen(!isOpen)
   }
+
+  UseClickOutside(menuRef, isOpen, () => handleToggle())
+
   return (
     <div className="flex flex-row justify-between items-center mb-10">
       <AnyGameLogo />
-      <div className="xxs:hidden md:flex flex-1 flex-row justify-end items-center space-x-4">
-        <div className="cursor-pointer">Rate Game</div>
-        <div className="cursor-pointer">Future Updates</div>
-        <Notification className="cursor-pointer" />
-        <Profile className="cursor-pointer" onClick={handleProfile} />
-        <SignOut className="cursor-pointer" onClick={handleSignOut} />
-      </div>
-      {/* <img src={'/icons/Burger.svg'}/> */}
-      <div className="relative">
-        <Burger className={'md:hidden'} onClick={handleToggle} />
-        {isOpen && (
-          <div className="absolute z-10 right-0 top-0 w-80 h-96 rounded-xl bg-white text-black">
-            <div className="flex flex-col m-4 space-y-2 ">
-              <div className="flex justify-between items-center">
-                <div>My Lybrary</div>
-                <Close className="w-10 h-10" onClick={handleToggle} />
-              </div>
-              <div className="flex justify-between items-center">
-                <div>Rate Game</div>
-                <Profile className="bg-black text-white p-2 rounded-full w-10 h-10 " />
-              </div>
-              <div className="flex justify-between items-center">
-                <div>Future Updates</div>
-                <Notification className="bg-black text-white p-2 rounded-full w-10 h-10" />
-              </div>
-              <div className="flex justify-between items-center">
-                <div></div>
-                <SignOut className="bg-black p-2 rounded-full w-10 h-10" onClick={handleSignOut} />
-              </div>
+      <div className="flex justify-center items-center space-x-10 text-xl font-semibold">
+        <p className="cursor-pointer">Genres</p>
+        <p className="cursor-pointer">Tags</p>
+        <p className="cursor-pointer">Platforms</p>
+        <div ref={menuRef} className="relative">
+          <Profile
+            className="xs:hidden md:flex cursor-pointer text-white w-8 h-8"
+            onClick={handleToggle}
+          />
+          <Burger className={'md:hidden cursor-pointer'} onClick={handleToggle} />
+          {isOpen && (
+            <div className="absolute py-4 w-52 bg-gray space-y-2 rounded-xl top-10 right-0 text-sm">
+              <MenuItem icon={Profile} text="Profile" onClick={handleProfile} />
+              <MenuItem icon={GameList} text="Game List" onClick={handleGameList} />
+              <MenuItem icon={Notification} text="Notifications" onClick={handleNotifications} />
+              <MenuItem icon={SignOut} text="Log Out" onClick={handleSignOut} />
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
+    </div>
+  )
+}
+
+type MenuItemProps = {
+  icon: React.ElementType
+  text: string
+  onClick: () => void
+}
+
+const MenuItem = ({ icon: Icon, text, onClick }: MenuItemProps) => {
+  return (
+    <div className="flex items-center space-x-2 cursor-pointer" onClick={onClick}>
+      <Icon className={'bg-black text-white p-2 rounded-full w-10 h-10 ml-4'} />
+      <p>{text}</p>
     </div>
   )
 }

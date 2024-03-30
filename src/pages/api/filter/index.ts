@@ -1,4 +1,3 @@
-import { ExtendRequestSession } from '@/lib/backend/middlewares/sessionMiddleware'
 import { OptionType } from '@/lib/backend/types/FilterOption'
 import { withRouter } from '@/lib/backend/withRouter'
 import prisma from '@/lib/prisma'
