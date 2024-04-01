@@ -22,7 +22,7 @@ const Home = ({ initialGames }: ComponentProps) => {
 
   const [page, setPage] = useState<number>(1)
   const [isLoading, setIsLoading] = useState(false)
-  const [gamesEnded, setGamesEnded] = useState(false)
+  const [gamesEnded, setGamesEnded] = useState(initialGames.length < PAGE_SIZE)
   const [games, setGames] = useState(initialGames)
 
   useEffect(() => {
@@ -33,16 +33,17 @@ const Home = ({ initialGames }: ComponentProps) => {
     const fetchGames = async () => {
       try {
         let res: AxiosResponse
-        if (router.query.type) {
+
+        if (router.query.type)
           res = await HomeAPI.games(
             page,
             router.query.type as GameCriteria,
-            String(router.query.slug)
+            String(router.query.slug || router.query.name)
           )
-        } else res = await HomeAPI.games(page)
+        else res = await HomeAPI.games(page)
 
-        if (res.data.games.length < PAGE_SIZE) setGamesEnded(true)
-        else setGamesEnded(false)
+        res.data.games.length < PAGE_SIZE ? setGamesEnded(true) : setGamesEnded(false)
+
         setGames((prevGames) => [...prevGames, ...res.data.games])
       } catch (error) {
         console.error('Error fetching games:', error)
@@ -82,7 +83,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const games = await getGamesByCriteria(
     1,
     context.query.type as unknown as GameCriteria,
-    context.query.slug as unknown as string
+    (context.query.slug || context.query.name) as unknown as string
   )
 
   const serializedGames = serializeData(games)

@@ -3,14 +3,15 @@ import axios from 'axios'
 export enum GameCriteria {
   genre = 'genre',
   tag = 'tag',
-  parentPlatform = 'parentPlatform'
+  parentPlatform = 'parentPlatform',
+  name = 'name'
 }
 
-const games = (page: number, type?: GameCriteria, slug?: string) => {
+const games = (page: number, type?: GameCriteria, value?: string) => {
   let url = `/api/home?page=${page}`
 
-  if (slug && type) {
-    url += `&type=${type}&slug=${slug}`
+  if (type && value) {
+    url += `&type=${type}&value=${value}`
   }
 
   return axios.get(url)

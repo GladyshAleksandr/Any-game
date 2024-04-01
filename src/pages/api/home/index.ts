@@ -16,10 +16,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 const Games = async (req: NextApiRequest, res: NextApiResponse) => {
   const page = Number(req.query.page)
   const type = req.query.type as unknown as GameCriteria
-  const slug = String(req.query.slug)
+  const value = String(req.query.value)
 
   try {
-    const games = await getGamesByCriteria(page, type, slug)
+    const games = await getGamesByCriteria(page, type, value)
 
     return res.status(200).json({ games })
   } catch (error: any) {

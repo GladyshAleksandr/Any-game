@@ -7,6 +7,8 @@ const config: Config = {
       colors: {
         darkGold: '#B59410',
         gray: '#282828',
+        slightGray: '#1f1f1f',
+        lightGray: '#555555',
         lightRed: '#EF4444',
         red: '#DC2626'
       },

@@ -15,17 +15,17 @@ const GameCards = ({ games }: GameCardType) => {
       {games.map((game) => (
         <div
           key={game.id}
-          className="flex flex-col space-y-4 bg-[#1b1b1b] rounded-2xl cursor-pointer"
+          className="flex flex-col space-y-4 bg-slightGray hover:bg-[#333333] rounded-2xl cursor-pointer"
           onClick={() => {
             router.push('games/' + game.slug)
           }}
         >
           <img
-            className="object-cover rounded-2xl"
-            src={game.backgroundImage} // Path to your image in the public directory
+            className="object-cover rounded-2xl "
+            src={game.backgroundImage}
             alt="Description of the image"
           />
-          <div className="px-3 mt-2 ">
+          <div className="px-3 pb-4 mt-2 ">
             <div className="flex flex-row justify-between items-center">
               <div className="flex space-x-1">
                 {game.parentPlatforms.map((platform) => (

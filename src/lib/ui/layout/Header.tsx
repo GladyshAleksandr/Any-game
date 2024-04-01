@@ -87,7 +87,7 @@ const Header = ({ data }: { data: HeaderOptionsType }) => {
             <Avatar user={data.user as any} className="w-8 h-8 xs:w-10 xs:h-10" />
           </div>
           {isOpen && (
-            <div className="absolute py-4 w-52 bg-gray space-y-2 rounded-xl top-14 right-0 text-sm">
+            <div className="absolute py-4 w-52 bg-gray space-y-2 rounded-xl top-14 right-0 ">
               <MenuItem icon={Profile} text="Profile" onClick={handleProfile} />
               <MenuItem icon={GameList} text="Game List" onClick={handleGameList} />
               <MenuItem icon={Notification} text="Notifications" onClick={handleNotifications} />
@@ -149,8 +149,11 @@ type MenuItemProps = {
 
 const MenuItem = ({ icon: Icon, text, onClick }: MenuItemProps) => {
   return (
-    <div className="flex items-center space-x-2 cursor-pointer" onClick={onClick}>
-      <Icon className={'bg-black text-white p-2 rounded-full w-10 h-10 ml-4'} />
+    <div
+      className="flex items-center space-x-2 cursor-pointer hover:bg-lightGray"
+      onClick={onClick}
+    >
+      <Icon className={'bg-black text-white p-2 rounded-full w-9 h-9 ml-4'} />
       <p>{text}</p>
     </div>
   )
