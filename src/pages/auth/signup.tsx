@@ -56,10 +56,7 @@ const SignUp = () => {
         />
 
         <button
-          className={classNames(
-            'w-full bg-red-500 px-4 py-2 rounded-md',
-            isDisabled && 'opacity-30'
-          )}
+          className={classNames('w-full bg-red px-4 py-2 rounded-md', isDisabled && 'opacity-30')}
         >
           Log in
         </button>

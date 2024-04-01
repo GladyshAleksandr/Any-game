@@ -1,6 +1,6 @@
-import { ExtendRequestSession } from '@/lib/backend/middlewares/sessionMiddleware'
-import getGames from '@/lib/backend/utils/getGames'
+import getGamesByCriteria from '@/lib/backend/utils/getGamesByCriteria'
 import { withRouter } from '@/lib/backend/withRouter'
+import { GameCriteria } from '@/lib/ui/api-client/home'
 import { NextApiRequest, NextApiResponse } from 'next'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -15,9 +15,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 const Games = async (req: NextApiRequest, res: NextApiResponse) => {
   const page = Number(req.query.page)
+  const type = req.query.type as unknown as GameCriteria
+  const slug = String(req.query.slug)
+
+  console.log('page', page)
+  console.log('type', type)
+  console.log('slug', slug)
 
   try {
-    const games = await getGames(page)
+    const games = await getGamesByCriteria(page, type, slug)
+
     return res.status(200).json({ games })
   } catch (error: any) {
     return res.status(500).json({ message: error.message })

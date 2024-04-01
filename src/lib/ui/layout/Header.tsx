@@ -11,6 +11,8 @@ import { SessionJwtUserType } from '@/lib/backend/repositories/user.repository'
 import Avatar from 'components/ui/Avatar'
 import classNames from '@/lib/utils/classNames'
 import styles from '@/styles/scrollbar.module.css'
+import Search from '@icons/Search.svg'
+import { GameCriteria } from '../api-client/home'
 
 type OptType = {
   name: string
@@ -60,22 +62,29 @@ const Header = ({ data }: { data: HeaderOptionsType }) => {
 
   UseClickOutside(menuRef, isOpen, () => handleToggle())
 
-  const hanleGenres = () => {}
+  const hanleGenres = (slug: string) => {
+    router.push(`/home?type=${GameCriteria.genre}&slug=${slug}`)
+  }
 
-  const handleTags = () => {}
+  const handleTags = (slug: string) => {
+    router.push(`home?type=${GameCriteria.tag}&slug=${slug}`)
+  }
 
-  const handlePlatforms = () => {}
+  const handlePlatforms = (slug: string) => {
+    router.push(`/home?type=${GameCriteria.parentPlatform}&slug=${slug}`)
+  }
 
   return (
-    <div className="flex flex-row justify-between items-center mb-10">
+    <div className="flex justify-between items-center mb-10">
       <AnyGameLogo />
-      <div className="flex justify-center items-center space-x-10">
-        <FindByOption header="Genres" options={data.genres} />
-        <FindByOption header="Tags" options={data.tags} />
-        <FindByOption header="Platforms" options={data.platforms} />
+      <div className="flex justify-center items-center xxs:space-x-2 xsm:space-x-4 sm:space-x-10">
+        <FindByOption header="Genres" options={data.genres} onClick={hanleGenres} />
+        <FindByOption header="Tags" options={data.tags} onClick={handleTags} />
+        <FindByOption header="Platforms" options={data.platforms} onClick={handlePlatforms} />
+        <Search className="text-white w-8 h-8 xxs:hidden xsm:flex" />
         <div ref={menuRef} className="relative">
           <div onClick={handleToggle}>
-            <Avatar user={data.user as any} className="w-10 h-10" />
+            <Avatar user={data.user as any} className="w-8 h-8 xs:w-10 xs:h-10" />
           </div>
           {isOpen && (
             <div className="absolute py-4 w-52 bg-gray space-y-2 rounded-xl top-14 right-0 text-sm">
@@ -94,9 +103,10 @@ const Header = ({ data }: { data: HeaderOptionsType }) => {
 type FindByOptionType = {
   header: string
   options: OptType[]
+  onClick: (slug: string) => void
 }
 
-const FindByOption = ({ header, options }: FindByOptionType) => {
+const FindByOption = ({ header, options, onClick }: FindByOptionType) => {
   const menuRef = useRef<HTMLDivElement>(null)
 
   const [isOpen, setIsOpen] = useState(false)
@@ -106,19 +116,24 @@ const FindByOption = ({ header, options }: FindByOptionType) => {
   UseClickOutside(menuRef, isOpen, () => setIsOpen(false))
 
   return (
-    <div ref={menuRef} className="relative cursor-pointer" onClick={handleToggle}>
-      <p className="text-xl font-semibold">{header}</p>
+    <div ref={menuRef} className="cursor-pointer" onClick={handleToggle}>
+      <p className="xsm:text-xl font-semibold">{header}</p>
 
       {isOpen && (
         <div
           className={classNames(
-            'absolute grid grid-cols-2 z-10 top-10 left-0 rounded-xl bg-gray w-72 max-h-100 px-4 overflow-y-auto',
+            'absolute grid xxs:grid-cols-1 xsm:grid-cols-2 sm:grid-cols-3 justify-items-center z-10 top-24 rounded-xl bg-gray max-h-100 p-2 overflow-y-auto',
             styles['show-scrollbar']
-            // widerSubOption ? 'grid-cols-3 w-80' : 'w-full' //TODO
           )}
         >
           {options.map((option) => (
-            <p className="w-[calc(100%-1rem)] truncate text-sm">{option.name}</p>
+            <p
+              key={option.slug}
+              onClick={() => onClick(option.slug)}
+              className="w-[calc(100%-1rem)] truncate rounded-md py-1 hover:bg-lightRed"
+            >
+              {option.name}
+            </p>
           ))}
         </div>
       )}

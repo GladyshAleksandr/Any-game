@@ -151,10 +151,7 @@ const CommentInput: React.FC<ComponentProps> = (props) => {
             Link
           </button>
         </div>
-        <button
-          className="bg-red-500 rounded-full p-2 text-white ml-10"
-          onClick={handleSubmitComment}
-        >
+        <button className="bg-red rounded-full p-2 text-white ml-10" onClick={handleSubmitComment}>
           Comment
         </button>
       </div>

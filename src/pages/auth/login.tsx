@@ -54,10 +54,7 @@ const Login = () => {
         <Input type="text" placeholder="Username or email" onChange={handleUsernameOrEmailChange} />
         <Input type="password" placeholder="Password" onChange={handlePasswordChange} />
         <button
-          className={classNames(
-            'w-full bg-red-500 px-4 py-2 rounded-md',
-            isDisabled && 'opacity-30'
-          )}
+          className={classNames('w-full bg-red px-4 py-2 rounded-md', isDisabled && 'opacity-30')}
         >
           Log in
         </button>

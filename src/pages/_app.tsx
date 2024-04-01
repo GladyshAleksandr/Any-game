@@ -8,7 +8,7 @@ import prisma from '@/lib/prisma'
 
 const MyApp = ({ Component, pageProps, data }: AppProps) => {
   return (
-    <div className="text-[#ededed] xxs:m-2  xs:m-10">
+    <div className="text-[#ededed] xxs:mx-2  xs:mx-10 my-10">
       <Head>
         <link rel="icon" type="image/png" href="/favicon.png" />
       </Head>

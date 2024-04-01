@@ -1,6 +1,13 @@
 import axios from 'axios'
 
-const games = async (page: number) => axios.get(`/api/home?page=${page}`)
+export enum GameCriteria {
+  genre = 'genre',
+  tag = 'tag',
+  parentPlatform = 'parentPlatform'
+}
+
+const games = (page: number, type?: GameCriteria, slug?: string) =>
+  axios.get(`/api/home?page=${page}&type=${type}&slug=${slug}`)
 
 const HomeAPI = {
   games

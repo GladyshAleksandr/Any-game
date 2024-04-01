@@ -6,7 +6,9 @@ const config: Config = {
     extend: {
       colors: {
         darkGold: '#B59410',
-        gray: '#282828'
+        gray: '#282828',
+        lightRed: '#EF4444',
+        red: '#DC2626'
       },
       maxHeight: {
         '100': '400px'
