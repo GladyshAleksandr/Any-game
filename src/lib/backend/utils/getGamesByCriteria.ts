@@ -1,17 +1,15 @@
+import { PAGE_SIZE } from '@/constants'
 import prisma from '@/lib/prisma'
 import { GameCriteria } from '@/lib/ui/api-client/home'
 
 const getGamesByCriteria = async (page: number = 1, modelType?: GameCriteria, slug?: string) => {
-  const pageSize = 20
-
-  if (modelType?.length > 0) {
-    console.log('modelType', modelType)
-    const games = await prisma[modelType].findUnique({
+  if (modelType) {
+    const games = await (prisma[modelType as keyof typeof prisma] as any).findUnique({
       where: { slug: slug },
       select: {
         games: {
-          skip: (page - 1) * pageSize,
-          take: pageSize,
+          skip: (page - 1) * PAGE_SIZE,
+          take: PAGE_SIZE,
           include: {
             esrbRating: true,
             parentPlatforms: true,
@@ -26,8 +24,8 @@ const getGamesByCriteria = async (page: number = 1, modelType?: GameCriteria, sl
   }
 
   const games = await prisma.game.findMany({
-    skip: (page - 1) * pageSize,
-    take: pageSize,
+    skip: (page - 1) * PAGE_SIZE,
+    take: PAGE_SIZE,
     include: {
       esrbRating: true,
       parentPlatforms: true,

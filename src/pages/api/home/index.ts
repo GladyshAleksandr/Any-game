@@ -18,14 +18,8 @@ const Games = async (req: NextApiRequest, res: NextApiResponse) => {
   const type = req.query.type as unknown as GameCriteria
   const slug = String(req.query.slug)
 
-  console.log('page', page)
-  console.log('type', type)
-  console.log('slug', slug)
-
   try {
     const games = await getGamesByCriteria(page, type, slug)
-
-    console.log('games', games[0].name)
 
     return res.status(200).json({ games })
   } catch (error: any) {

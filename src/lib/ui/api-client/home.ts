@@ -6,8 +6,15 @@ export enum GameCriteria {
   parentPlatform = 'parentPlatform'
 }
 
-const games = (page: number, type?: GameCriteria, slug?: string) =>
-  axios.get(`/api/home?page=${page}&type=${type}&slug=${slug}`)
+const games = (page: number, type?: GameCriteria, slug?: string) => {
+  let url = `/api/home?page=${page}`
+
+  if (slug && type) {
+    url += `&type=${type}&slug=${slug}`
+  }
+
+  return axios.get(url)
+}
 
 const HomeAPI = {
   games

@@ -1,10 +1,11 @@
-import getGames from '@/lib/backend/utils/getGames'
+import { PAGE_SIZE } from '@/constants'
 import getGamesByCriteria from '@/lib/backend/utils/getGamesByCriteria'
 import serializeData from '@/lib/backend/utils/serializeData'
 import HomeAPI, { GameCriteria } from '@/lib/ui/api-client/home'
 import GameCards from '@/modules/home/components/molecules/GameCards'
 import SearchGames from '@/modules/home/components/molecules/SearchGames'
 import { GameExtended } from '@/types/types'
+import { AxiosResponse } from 'axios'
 import OptionButton from 'components/ui/OptionButton'
 import Spinner from 'components/ui/Spinner'
 import debounce from 'lodash.debounce'
@@ -31,12 +32,17 @@ const Home = ({ initialGames }: ComponentProps) => {
   useEffect(() => {
     const fetchGames = async () => {
       try {
-        console.log('CLIENT page', page)
-        console.log('CLIENT type', router.query.type)
-        console.log('CLIENT slug', router.query.slug)
+        let res: AxiosResponse
+        if (router.query.type) {
+          res = await HomeAPI.games(
+            page,
+            router.query.type as GameCriteria,
+            String(router.query.slug)
+          )
+        } else res = await HomeAPI.games(page)
 
-        const res = await HomeAPI.games(page, router.query.type, router.query.slug)
-        if (res.data.games.length < 20) setGamesEnded(true)
+        if (res.data.games.length < PAGE_SIZE) setGamesEnded(true)
+        else setGamesEnded(false)
         setGames((prevGames) => [...prevGames, ...res.data.games])
       } catch (error) {
         console.error('Error fetching games:', error)
@@ -45,7 +51,7 @@ const Home = ({ initialGames }: ComponentProps) => {
       }
     }
 
-    if (page === 1) return
+    if (page === 1 || gamesEnded) return
     fetchGames()
   }, [page])
 
