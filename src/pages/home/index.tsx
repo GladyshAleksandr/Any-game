@@ -22,25 +22,21 @@ const Home = ({ initialGames }: ComponentProps) => {
   const [page, setPage] = useState<number>(1)
   const [isLoading, setIsLoading] = useState(false)
   const [gamesEnded, setGamesEnded] = useState(false)
-  const [criteria, setCriteria] = useState(router.query.type)
   const [games, setGames] = useState(initialGames)
 
   useEffect(() => {
-    if (router.query.type !== criteria) {
-      setGames(initialGames)
-      setCriteria(router.query.type)
-    }
-  }, [criteria])
+    setGames(initialGames)
+  }, [router.query])
 
   useEffect(() => {
     const fetchGames = async () => {
       try {
         console.log('CLIENT page', page)
-        console.log('CLIENT criteria', criteria)
-        console.log('CLIENT page', router.query.slug)
+        console.log('CLIENT type', router.query.type)
+        console.log('CLIENT slug', router.query.slug)
 
-        const res = await HomeAPI.games(page, criteria, router.query.slug)
-        if (router.query.type === criteria && res.data.games.length < 20) setGamesEnded(true)
+        const res = await HomeAPI.games(page, router.query.type, router.query.slug)
+        if (res.data.games.length < 20) setGamesEnded(true)
         setGames((prevGames) => [...prevGames, ...res.data.games])
       } catch (error) {
         console.error('Error fetching games:', error)
@@ -77,7 +73,6 @@ const Home = ({ initialGames }: ComponentProps) => {
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  console.log(' context.query.type', context.query.type)
   const games = await getGamesByCriteria(
     1,
     context.query.type as unknown as GameCriteria,

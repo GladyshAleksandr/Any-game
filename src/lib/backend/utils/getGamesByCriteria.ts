@@ -4,7 +4,8 @@ import { GameCriteria } from '@/lib/ui/api-client/home'
 const getGamesByCriteria = async (page: number = 1, modelType?: GameCriteria, slug?: string) => {
   const pageSize = 20
 
-  if (modelType) {
+  if (modelType?.length > 0) {
+    console.log('modelType', modelType)
     const games = await prisma[modelType].findUnique({
       where: { slug: slug },
       select: {

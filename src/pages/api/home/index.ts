@@ -25,6 +25,8 @@ const Games = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const games = await getGamesByCriteria(page, type, slug)
 
+    console.log('games', games[0].name)
+
     return res.status(200).json({ games })
   } catch (error: any) {
     return res.status(500).json({ message: error.message })
