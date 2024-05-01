@@ -46,6 +46,7 @@ export const sessionMiddleware = async (
       ;(req as ExtendRequestSession & NextApiRequest).session.user = user
     } else {
       const session = await getSession({ req })
+      console.log('session_', session)
       if (!session || !session.user?.email)
         return res.status(302).json({ message: 'Unauthorized', redirectTo: '/auth/login' })
 

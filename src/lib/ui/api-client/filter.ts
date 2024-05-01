@@ -1,7 +1,7 @@
 import { OptionType, Option } from '@/lib/backend/types/FilterOption'
 import axios from 'axios'
 
-export type FilterReqData = { type: OptionType; options: Option[] }
+export type FilterReqData = { type: OptionType; isOpen: boolean; options: Option[] }
 
 const filter = async (data: FilterReqData[]) => axios.post('/api/filter', data) // TODO URL HISTORY
 

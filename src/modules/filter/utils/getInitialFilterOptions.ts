@@ -58,10 +58,16 @@ const getInitialFilterOptions = (
     }))
   },
   {
-    text: 'Status',
+    text: 'In Game List',
+    isOpen: false,
+    type: OptionType.UserGameStatus,
+    options: [{ name: '', slug: '', value: null }]
+  },
+  {
+    text: 'Announced',
     isOpen: false,
     type: OptionType.Status,
-    options: [{ name: 'To Be Announced', slug: 'tba', value: null }]
+    options: [{ name: '', slug: '', value: null }]
   }
 ]
 

@@ -6,6 +6,7 @@ export enum OptionType {
   ReleaseYear,
   Rating,
   AdultRating,
+  UserGameStatus,
   Status
 }
 

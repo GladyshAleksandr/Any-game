@@ -9,6 +9,7 @@ export const userFromSessionOrJWT = async (
   const select = { id: true, username: true, email: true, name: true, profileImage: true }
 
   const session = await getSession(context)
+  console.log('session form userFromSesJwt', session)
   const email = session?.user?.email
   const token = context.req.cookies.jwtToken || context.req.headers.authorization?.split(' ')[1]
 

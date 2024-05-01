@@ -3,19 +3,29 @@ import { withRouter } from '@/lib/backend/withRouter'
 import prisma from '@/lib/prisma'
 import { FilterReqData } from '@/lib/ui/api-client/filter'
 import { NextApiRequest, NextApiResponse } from 'next'
+import {
+  ExtendRequestSession,
+  sessionMiddleware
+} from '@/lib/backend/middlewares/sessionMiddleware'
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(
+  req: NextApiRequest & ExtendRequestSession,
+  res: NextApiResponse
+) {
   await withRouter({
     req,
     res,
     postRoute: {
-      controller: GamesByFilter
+      controller: GamesByFilter,
+      middlewares: [sessionMiddleware]
     }
   })
 }
 
-const GamesByFilter = async (req: NextApiRequest, res: NextApiResponse) => {
+const GamesByFilter = async (req: NextApiRequest & ExtendRequestSession, res: NextApiResponse) => {
   const data = req.body as FilterReqData[]
+
+  const userId = req.session.user.id
 
   const filterIncludedCheckBoxes = (arr: FilterReqData[]) => {
     return arr.flatMap((item) =>
@@ -48,7 +58,8 @@ const GamesByFilter = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const AdultRating = data.filter((el) => el.type === OptionType.AdultRating)
   const adultRatingSlugs = filterIncludedCheckBoxes(AdultRating)
-  const status = data.find((el) => el.type === OptionType.Status)
+  const showInGameList = data.find((el) => el.type === OptionType.UserGameStatus)?.isOpen
+  const status = data.find((el) => el.type === OptionType.Status)?.isOpen
 
   try {
     const filteredGames = await prisma.game.findMany({
@@ -130,7 +141,14 @@ const GamesByFilter = async (req: NextApiRequest, res: NextApiResponse) => {
                   }
                 : {}
           },
-          { tba: status ? status.options[0]?.value : undefined }
+          {
+            users: {
+              none: {
+                userId: userId
+              }
+            }
+          },
+          { tba: status }
         ]
       },
       include: {

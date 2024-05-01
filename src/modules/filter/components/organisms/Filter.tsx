@@ -3,7 +3,7 @@ import { Dispatch, SetStateAction, useState } from 'react'
 import { FilterOptionType, OptionType } from '@/lib/backend/types/FilterOption'
 import getInitialFilterOptions from '../../utils/getInitialFilterOptions'
 import FilterOption from '../molecules/FilterOption'
-import { isIncludeExcludeCheckBox } from '../../utils/filterOptionUnion'
+import { isIncludeExcludeCheckBox, isSimpleCheckBox } from '../../utils/filterOptionUnion'
 import { GameExtended } from '@/types/types'
 import FilterAPI from '@/lib/ui/api-client/filter'
 
@@ -100,9 +100,12 @@ const Filter = ({
 
   const hanleSubmit = async () => {
     const optionsToSend = filterOptions
-      .filter((option) => option.options.some((el) => el.value !== null))
+      .filter((option) =>
+        !isSimpleCheckBox(option.type) ? option.options.some((el) => el.value !== null) : true
+      )
       .map((option) => ({
         type: option.type,
+        isOpen: option.isOpen,
         options: option.options.filter((el) => el.value !== null)
       }))
 

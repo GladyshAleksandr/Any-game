@@ -12,7 +12,7 @@ const Avatar = ({ user, className }: ComponentProps) => {
     className || ''
   )
 
-  if (!user.id) return <div className={noImageClassnames}>?</div>
+  if (!user?.id) return <div className={noImageClassnames}>?</div>
   return (
     <>
       {user.profileImage ? (

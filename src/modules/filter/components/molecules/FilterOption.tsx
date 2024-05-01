@@ -1,8 +1,10 @@
 import { FilterOptionType, OptionType } from '@/lib/backend/types/FilterOption'
 import FilterSubOptions from '../atoms/FilterSubOption'
-import { isSearchField } from '../../utils/filterOptionUnion'
+import { isSearchField, isSimpleCheckBox } from '../../utils/filterOptionUnion'
 import OptionButton from 'components/ui/OptionButton'
 import Collapse from '@icons/Collapse.svg'
+import CheckboxPlus from '@icons/CheckboxPlus.svg'
+import CheckboxMinus from '@icons/CheckboxMinus.svg'
 
 type ComponentProps = {
   handleToggleOption: (type?: OptionType) => void
@@ -31,19 +33,26 @@ const FilterOption = ({
         >
           {text}
         </OptionButton>
+      ) : isSimpleCheckBox(type) ? (
+        <OptionButton
+          onClick={() => handleToggleOption(type)}
+          openContent={<CheckboxPlus className="w-4 h-4" />}
+          closeContent={<CheckboxMinus className="w-4 h-4" />}
+          className="w-full"
+        >
+          {text}
+        </OptionButton>
       ) : (
         <OptionButton
           className="relative w-full"
+          openContent={<Collapse className="w-4 h-4" />}
+          closeContent={<Collapse className="w-4 h-4" />}
           onClick={(event) => {
             event.stopPropagation()
             handleToggleOption(type)
           }}
         >
-          <div className="w-full px-4 flex justify-between items-center">
-            {text}
-
-            <Collapse className="w-4 h-4" />
-          </div>
+          {text}
           {isOpen && (
             <FilterSubOptions
               isOpen={isOpen}
