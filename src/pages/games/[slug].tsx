@@ -58,7 +58,7 @@ const Game = ({ game, user }: ComponentProps) => {
         <div className="flex flex-col items-center">
           <img
             onClick={() => setSelectedScreenshot(0)}
-            className={'object-cover rounded-2xl cursor-pointer'}
+            className={'object-cover rounded-2xl cursor-pointer w-[420px] h-60'}
             src={game.backgroundImage}
           />
           <div className="flex flex-col items-center mt-4">

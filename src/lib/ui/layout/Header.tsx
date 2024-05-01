@@ -67,7 +67,7 @@ const Header = ({ data }: { data: HeaderOptionsType }) => {
   }
 
   const handleTags = (slug: string) => {
-    router.push(`home?type=${GameCriteria.tag}&slug=${slug}`)
+    router.push(`/home?type=${GameCriteria.tag}&slug=${slug}`)
   }
 
   const handlePlatforms = (slug: string) => {

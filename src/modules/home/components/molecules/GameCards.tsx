@@ -21,7 +21,7 @@ const GameCards = ({ games }: GameCardType) => {
           }}
         >
           <img
-            className="object-cover rounded-2xl "
+            className="object-cover rounded-2xl w-[400px] h-[180px]"
             src={game.backgroundImage}
             alt="Description of the image"
           />
