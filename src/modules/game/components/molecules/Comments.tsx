@@ -67,7 +67,7 @@ const Comments = ({ gameId, comments, userId, setComments }: ComponentProps) => 
 
   const mainComments = comments.filter((comment) => !comment.repliedToId)
   const replies = comments.filter((comment) => comment.repliedToId)
-
+  //TODO! replies of replies bug
   return (
     <div>
       {mainComments.map((comment) => (
@@ -80,16 +80,18 @@ const Comments = ({ gameId, comments, userId, setComments }: ComponentProps) => 
             setComments={setComments}
           />
           <div className="ml-16">
-            {replies.map((reply) => (
-              <Comment
-                key={reply.id}
-                comment={reply}
-                gameId={gameId}
-                userId={userId}
-                handleLikeOrDislike={handleLikeOrDislike}
-                setComments={setComments}
-              />
-            ))}
+            {replies
+              .filter((el) => el.repliedToId === comment.id)
+              .map((reply) => (
+                <Comment
+                  key={reply.id}
+                  comment={reply}
+                  gameId={gameId}
+                  userId={userId}
+                  handleLikeOrDislike={handleLikeOrDislike}
+                  setComments={setComments}
+                />
+              ))}
           </div>
         </div>
       ))}

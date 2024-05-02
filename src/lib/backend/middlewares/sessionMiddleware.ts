@@ -1,8 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import jwt from 'jsonwebtoken'
 import prisma from '@/lib/prisma'
-import { getSession } from 'next-auth/react'
-import { NextResponse } from 'next/server'
+import { authOptions } from '@/pages/api/auth/[...nextauth]'
+import { getServerSession } from 'next-auth'
 
 export interface AuthSession {
   expires: string
@@ -45,7 +45,7 @@ export const sessionMiddleware = async (
       })
       ;(req as ExtendRequestSession & NextApiRequest).session.user = user
     } else {
-      const session = await getSession({ req })
+      const session = await getServerSession(req, res, authOptions)
       console.log('session_', session)
       if (!session || !session.user?.email)
         return res.status(302).json({ message: 'Unauthorized', redirectTo: '/auth/login' })
