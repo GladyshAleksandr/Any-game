@@ -58,7 +58,7 @@ const GamesByFilter = async (req: NextApiRequest & ExtendRequestSession, res: Ne
 
   const AdultRating = data.filter((el) => el.type === OptionType.AdultRating)
   const adultRatingSlugs = filterIncludedCheckBoxes(AdultRating)
-  const showInGameList = data.find((el) => el.type === OptionType.UserGameStatus)?.isOpen
+  const showGamesInGameList = data.find((el) => el.type === OptionType.UserGameStatus)?.isOpen
   const status = data.find((el) => el.type === OptionType.Status)?.isOpen
 
   try {
@@ -142,11 +142,13 @@ const GamesByFilter = async (req: NextApiRequest & ExtendRequestSession, res: Ne
                 : {}
           },
           {
-            users: {
-              none: {
-                userId: userId
-              }
-            }
+            users: !showGamesInGameList
+              ? {
+                  none: {
+                    userId: userId
+                  }
+                }
+              : {}
           },
           { tba: status }
         ]
