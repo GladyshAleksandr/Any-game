@@ -47,19 +47,36 @@ const remove = async (req: NextApiRequest & ExtendRequestSession, res: NextApiRe
   const id = Number(req.query.id)
 
   try {
-    const removedCommentActions = await prisma.commentAction.deleteMany({
-      where: {
-        commentId: id
-      }
-    })
+    const ids = await deleteCommentAndReplies(id)
 
-    const removedComment = await prisma.comment.delete({
-      where: {
-        id: id
-      }
-    })
-    return res.status(200).json({ ...removedComment })
+    return res.status(200).json({ ids })
   } catch (error: any) {
     return res.status(500).json({ message: error.message })
   }
+}
+
+async function deleteCommentAndReplies(commentId: number, deletedIds: number[] = []) {
+  await prisma.commentAction.deleteMany({
+    where: {
+      commentId
+    }
+  })
+
+  const replies = await prisma.comment.findMany({
+    where: {
+      repliedToId: commentId
+    }
+  })
+
+  await Promise.all(replies.map((reply) => deleteCommentAndReplies(reply.id, deletedIds)))
+
+  const deletedComment = await prisma.comment.delete({
+    where: {
+      id: commentId
+    }
+  })
+
+  deletedIds.push(deletedComment.id)
+
+  return deletedIds
 }

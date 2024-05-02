@@ -45,11 +45,13 @@ const Comment = ({ comment, gameId, userId, handleLikeOrDislike, setComments }: 
     setShowOptions(false)
   }
 
-  const handleRemovetButton = async () => {
+  const handleRemoveButton = async () => {
     setShowOptions(false)
     const res = await CommentAPI.remove(comment.id)
 
-    setComments((prevState) => prevState.filter((comment) => comment.id !== res.data.id))
+    setComments((prevState) =>
+      prevState.filter((comment) => res.data.ids.every((id: number) => id !== comment.id))
+    )
   }
 
   UseClickOutside(menuRef, showOptions, () => setShowOptions(false))
@@ -114,7 +116,7 @@ const Comment = ({ comment, gameId, userId, handleLikeOrDislike, setComments }: 
                   <p>Edit</p>
                 </div>
                 <div
-                  onClick={handleRemovetButton}
+                  onClick={handleRemoveButton}
                   className="flex items-center space-x-2 cursor-pointer"
                 >
                   <Delete className="w-4 ml-4" />

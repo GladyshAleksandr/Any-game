@@ -11,7 +11,7 @@ type ComponentProps = {
 
 const CommentsSection = ({ gameId, gameComments, userId }: ComponentProps) => {
   const [comments, setComments] = useState(gameComments)
-  console.log('userId', userId)
+
   return (
     <div className="mt-20">
       <div>

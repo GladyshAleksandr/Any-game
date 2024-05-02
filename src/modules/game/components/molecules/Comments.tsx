@@ -14,6 +14,8 @@ type ComponentProps = {
 const Comments = ({ gameId, comments, userId, setComments }: ComponentProps) => {
   const router = useRouter()
 
+  const mainComments = comments.filter((comment) => !comment.repliedToId)
+
   const removeLikeOrDislike = async (commentId: number) => {
     const res = await CommentAPI.action(commentId, null)
 
@@ -65,9 +67,23 @@ const Comments = ({ gameId, comments, userId, setComments }: ComponentProps) => 
     } catch (error) {}
   }
 
-  const mainComments = comments.filter((comment) => !comment.repliedToId)
-  const replies = comments.filter((comment) => comment.repliedToId)
-  //TODO! replies of replies bug
+  const renderReplies = (parentId: number, indentLevel: number) => {
+    const replies = comments.filter((comment) => comment.repliedToId === parentId)
+
+    return replies.map((reply) => (
+      <div key={reply.id} className="ml-16">
+        <Comment
+          comment={reply}
+          gameId={gameId}
+          userId={userId}
+          handleLikeOrDislike={handleLikeOrDislike}
+          setComments={setComments}
+        />
+        {renderReplies(reply.id, indentLevel + 1)}
+      </div>
+    ))
+  }
+
   return (
     <div>
       {mainComments.map((comment) => (
@@ -79,20 +95,7 @@ const Comments = ({ gameId, comments, userId, setComments }: ComponentProps) => 
             handleLikeOrDislike={handleLikeOrDislike}
             setComments={setComments}
           />
-          <div className="ml-16">
-            {replies
-              .filter((el) => el.repliedToId === comment.id)
-              .map((reply) => (
-                <Comment
-                  key={reply.id}
-                  comment={reply}
-                  gameId={gameId}
-                  userId={userId}
-                  handleLikeOrDislike={handleLikeOrDislike}
-                  setComments={setComments}
-                />
-              ))}
-          </div>
+          {renderReplies(comment.id, 1)}
         </div>
       ))}
     </div>
