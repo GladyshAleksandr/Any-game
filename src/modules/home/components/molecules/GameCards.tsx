@@ -17,7 +17,7 @@ const GameCards = ({ games }: GameCardType) => {
           key={game.id}
           className="flex flex-col space-y-4 bg-slightGray hover:bg-[#333333] rounded-2xl cursor-pointer"
           onClick={() => {
-            router.push('games/' + game.slug)
+            router.push('/games/' + game.slug)
           }}
         >
           <img

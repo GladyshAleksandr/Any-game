@@ -22,6 +22,9 @@ const config: Config = {
       backgroundColor: {
         DEFAULT: 'black'
       },
+      borderWidth: {
+        '1': '1px'
+      },
       fontFamily: {
         archivo: ['Archivo Black', 'sans-serif']
       },
