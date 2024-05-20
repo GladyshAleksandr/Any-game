@@ -5,6 +5,7 @@ import AppProps from 'next/app'
 import Head from 'next/head'
 import { userFromSessionOrJWT } from '@/lib/backend/repositories/user.repository'
 import prisma from '@/lib/prisma'
+import { NotificationProvider } from '@/modules/contexts/NotificationContext'
 
 const MyApp = ({ Component, pageProps, data }: AppProps) => {
   return (
@@ -13,9 +14,11 @@ const MyApp = ({ Component, pageProps, data }: AppProps) => {
         <link rel="icon" type="image/png" href="/favicon.png" />
       </Head>
       <SessionProvider session={pageProps.session}>
-        <Layout data={data}>
-          <Component {...pageProps} />
-        </Layout>
+        <NotificationProvider>
+          <Layout data={data}>
+            <Component {...pageProps} />
+          </Layout>
+        </NotificationProvider>
       </SessionProvider>
     </div>
   )

@@ -18,7 +18,7 @@ const NotificationContext = createContext<{
   triggerNotification: () => {}
 })
 
-const NotificationProvider = ({ children }) => {
+const NotificationProvider = ({ children }: { children: React.ReactNode }) => {
   const [NotificationProps, setNotificationProps] = useState({
     title: '',
     description: '',

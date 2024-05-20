@@ -2,7 +2,7 @@ import Footer from './Footer'
 import Header, { HeaderOptionsType } from './Header'
 
 type ComponentProps = {
-  children: any
+  children: React.ReactNode
   data: HeaderOptionsType
 }
 

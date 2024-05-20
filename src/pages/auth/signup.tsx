@@ -1,13 +1,18 @@
 import isAuth from '@/lib/backend/utils/isAuth'
 import JWT from '@/lib/ui/api-client/auth'
 import classNames from '@/lib/utils/classNames'
+import { NotificationContext, NotificationType } from '@/modules/contexts/NotificationContext'
 import Input from 'components/Input'
 import { GetServerSidePropsContext } from 'next'
 import { signIn } from 'next-auth/react'
 import router from 'next/router'
-import { ChangeEvent, FormEvent, useEffect, useState } from 'react'
+import { ChangeEvent, FormEvent, useContext, useEffect, useState } from 'react'
 
 const SignUp = () => {
+  const { triggerNotification } = useContext(NotificationContext)
+
+  // triggerNotification('Success', 'Invitation sent', NotificationType.Success, 3000)
+
   const [isVerificationStep, setIsVerificationStep] = useState(false)
   const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')
@@ -37,7 +42,10 @@ const SignUp = () => {
     !validateConfirmPassword(password, confirmPassword)
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    triggerNotification('Success', 'Invitation sent', NotificationType.Success, 10000)
     e.preventDefault()
+
+    return
 
     try {
       const res = await JWT.signup({ username, email, password })

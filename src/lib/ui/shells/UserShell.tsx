@@ -6,7 +6,7 @@ import { GetServerSidePropsContext } from 'next'
 import { useRouter } from 'next/router'
 
 type ComponentProps = {
-  children: any
+  children: React.ReactNode
   user: User
 }
 
