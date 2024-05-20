@@ -1,7 +1,7 @@
 import { FilterOptionType, OptionType } from '@/lib/backend/types/FilterOption'
 import FilterSubOptions from '../atoms/FilterSubOption'
 import { isSearchField, isSimpleCheckBox } from '../../utils/filterOptionUnion'
-import OptionButton from 'components/ui/OptionButton'
+import OptionButton from 'components/OptionButton'
 import Collapse from '@icons/Collapse.svg'
 import CheckboxPlus from '@icons/CheckboxPlus.svg'
 import CheckboxMinus from '@icons/CheckboxMinus.svg'

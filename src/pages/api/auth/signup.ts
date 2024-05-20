@@ -2,9 +2,9 @@ import prisma from '@/lib/prisma'
 import Auth from '@/lib/ui/types/Auth'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { hashPassword } from '@/lib/utils/bcrypt/hashPassword'
-import sgMail from '@sendgrid/mail'
+import sendgrid from '@sendgrid/mail'
 
-sgMail.setApiKey(process.env.SENDGRID_API_KEY as string)
+sendgrid.setApiKey(process.env.SENDGRID_API_KEY as string)
 
 async function sendConfirmationEmail(email: string, confirmationCode: string) {
   const msg = {
@@ -16,7 +16,7 @@ async function sendConfirmationEmail(email: string, confirmationCode: string) {
   }
 
   try {
-    await sgMail.send(msg)
+    await sendgrid.send(msg)
     console.log('Confirmation email sent')
   } catch (error) {
     console.error('Error sending confirmation email:', error)
@@ -35,6 +35,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     })
 
     if (user) {
+      if (!user.isVerified) {
+        return res
+          .status(400)
+          .json({ message: 'Please verify your email', needToVerifyEmail: true })
+      }
+
       if (user.username === username)
         return res.status(400).json({ message: 'Username already taken' })
       return res.status(400).json({ message: 'Email already taken' })
@@ -62,7 +68,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     await sendConfirmationEmail(email, verificationCode.code)
 
     res.status(200).json({
-      message: 'Please confirm your email',
+      message: 'Please verify your email',
       needToVerifyEmail: true
     })
   } catch (error) {

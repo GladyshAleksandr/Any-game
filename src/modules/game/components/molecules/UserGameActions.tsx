@@ -1,7 +1,7 @@
 import handleRedirectResponse from '@/lib/backend/utils/handleRedirectResponse'
 import UserGameStatusAPI from '@/lib/ui/api-client/user_game_status'
 import { GameStatus } from '@prisma/client'
-import OptionButton from 'components/ui/OptionButton'
+import OptionButton from 'components/OptionButton'
 import { Dispatch, SetStateAction } from 'react'
 
 type ComponentProps = {

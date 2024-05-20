@@ -9,7 +9,7 @@ import Edit from '@icons/Edit.svg'
 import Delete from '@icons/Delete.svg'
 import UseClickOutside from '@/lib/ui/utils/useClickOutside'
 import CommentAPI from '@/lib/ui/api-client/comment'
-import Avatar from 'components/ui/Avatar'
+import Avatar from 'components/Avatar'
 import { useRouter } from 'next/router'
 
 type ComponentProps = {

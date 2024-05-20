@@ -1,5 +1,5 @@
 import JWT from '@/lib/ui/api-client/auth'
-import Input from 'components/ui/Input'
+import Input from 'components/Input'
 import { ChangeEvent, FormEvent, useState } from 'react'
 import router from 'next/router'
 import classNames from '@/lib/utils/classNames'

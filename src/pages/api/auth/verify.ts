@@ -12,6 +12,28 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     if (!user?.id) return res.status(400).json({ message: 'User not found' })
 
+    const verificationCode = await prisma.verificationCode.findFirst({
+      where: {
+        userId: user.id
+      }
+    })
+
+    if (verificationCode?.code === code)
+      await prisma.user.update({
+        where: {
+          email
+        },
+        data: {
+          isVerified: true
+        }
+      })
+    else {
+      if (!user?.id)
+        return res
+          .status(400)
+          .json({ message: 'Incorrect code, please try again, or get a new code' })
+    }
+
     const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET as string, {
       expiresIn: '30d'
     })
