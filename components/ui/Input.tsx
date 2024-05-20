@@ -24,7 +24,7 @@ const Input = (props: ComponentProps) => {
         autoComplete={props.autocomplete}
         placeholder={props.placeholder}
         required={props.required || false}
-        className={'outline-none text-black placeholder-black'}
+        className={'outline-none text-black placeholder-black w-full'}
         onChange={(e) => {
           if (props.onChange) props.onChange(e)
         }}

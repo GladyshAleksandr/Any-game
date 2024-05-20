@@ -6,9 +6,13 @@ const login = async (data: { usernameOrEmail: string; password: string }) =>
 
 const signup = async (data: Auth) => axios.post('/api/auth/signup', data)
 
+const verify = async (email: string, code: string) =>
+  axios.post('/api/auth/verify', { email, code })
+
 const JWT = {
   login,
-  signup
+  signup,
+  verify
 }
 
 export default JWT
