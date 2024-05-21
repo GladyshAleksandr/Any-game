@@ -100,8 +100,10 @@ const Notification = (props: ComponentProps) => {
                 <IconComponent className={classNames('h-6 w-6', iconColor)} aria-hidden="true" />
               </div>
               <div className="ml-3 w-0 flex-1 pt-0.5">
-                <p className="text-sm">{title}</p>
-                {props.description && <p className="mt-1 text-sm">{props.description}</p>}
+                <p className="font-medium text-black">{title}</p>
+                {props.description && (
+                  <p className="mt-1 text-sm text-black">{props.description}</p>
+                )}
               </div>
               {props.onDismiss && (
                 <div className="ml-4 flex-shrink-0 flex">
@@ -109,7 +111,7 @@ const Notification = (props: ComponentProps) => {
                     className="rounded-md inline-flex hover:text-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2"
                     onClick={() => {
                       setShow(false)
-                      props.onDismiss()
+                      props.onDismiss && props.onDismiss()
                     }}
                   >
                     <span className="sr-only">Close</span>

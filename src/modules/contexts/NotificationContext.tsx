@@ -54,7 +54,7 @@ const NotificationProvider = ({ children }: { children: React.ReactNode }) => {
           success={NotificationProps.type === NotificationType.Success}
           onDismiss={() => {
             NotificationProps.onDismiss && NotificationProps.onDismiss()
-            setNotificationProps((prevState) => ({ ...prevState, description: null, title: null }))
+            setNotificationProps((prevState) => ({ ...prevState, description: '', title: '' }))
           }}
           dismissAfter={NotificationProps.dismissAfter}
         />

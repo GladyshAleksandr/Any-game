@@ -13,20 +13,26 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
     })
 
-    if (!user) return res.status(400).json({ message: 'You entered wrong username or password' })
+    if (!user) return res.status(400).json({ message: 'You entered wrong username or email' })
 
     if (!user.password)
-      return res
-        .status(400)
-        .json({
-          message:
-            'No password associated with this account, because you signed up via Google. Please sign in via Google'
-        })
+      return res.status(400).json({
+        message:
+          'No password associated with this account, because you signed up via Google. Please continue with Google'
+      })
 
     const isMatch = await compareHashedPassword(password, user.password)
 
     if (!isMatch) {
       res.status(401).json({ message: 'Invalid credentials' })
+    }
+
+    if (!user.isVerified) {
+      return res.status(200).json({
+        message: 'Please verify your email',
+        isVerificationRequired: true,
+        email: user.email
+      })
     }
 
     const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET as string, {

@@ -116,14 +116,12 @@ model GameStudio {
 }
 
 model VerificationCode {
-  id         String   @id @default(cuid())
-  userId     Int 
+  userId     Int      @id
   code       String   @unique
   expires    DateTime
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
-  @@unique([userId, code])
 }
 
 model User {

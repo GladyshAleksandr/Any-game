@@ -6,14 +6,11 @@ import Input from 'components/Input'
 import { GetServerSidePropsContext } from 'next'
 import { signIn } from 'next-auth/react'
 import router from 'next/router'
-import { ChangeEvent, FormEvent, useContext, useEffect, useState } from 'react'
+import { ChangeEvent, FormEvent, useContext, useState } from 'react'
 
 const SignUp = () => {
   const { triggerNotification } = useContext(NotificationContext)
 
-  // triggerNotification('Success', 'Invitation sent', NotificationType.Success, 3000)
-
-  const [isVerificationStep, setIsVerificationStep] = useState(false)
   const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -42,18 +39,18 @@ const SignUp = () => {
     !validateConfirmPassword(password, confirmPassword)
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    triggerNotification('Success', 'Invitation sent', NotificationType.Success, 10000)
     e.preventDefault()
-
-    return
 
     try {
       const res = await JWT.signup({ username, email, password })
 
-      if (res.data.needToVerifyEmail) setIsVerificationStep(true)
+      if (res.data.isVerificationRequired) {
+        await JWT.sendCode(email)
+        router.push(`verify?email=${email}`)
+      }
     } catch (error: any) {
+      triggerNotification('', error.response.data.message, NotificationType.Success, 5000)
       console.log(error)
-      console.log(error.response.data.message)
     }
   }
 
@@ -103,90 +100,61 @@ const SignUp = () => {
     }))
   }
 
+  const handleSignInWithGoogle = async () => {
+    try {
+      signIn('google')
+    } catch (error) {
+      console.error('Error signing in:', error)
+    }
+  }
+
   const onLoginClick = () => router.push('login')
   return (
     <div className="space-y-4">
-      {!isVerificationStep ? (
-        <>
-          <p className="text-4xl font-extrabold">Sign up</p>
-          <div>
-            <p className="text-xl font-bold">Nice yo see you!</p>
-            <p>Start your journey with us</p>
-          </div>
-          <form className="w-80 flex-col space-y-4" onSubmit={handleSubmit}>
-            <Input type="text" placeholder="Email" onChange={handleEmailChange} />
-            {errors.email && <p className="text-lightRed text-sm">{errors.email}</p>}
+      <>
+        <p className="text-4xl font-extrabold">Sign up</p>
+        <div>
+          <p className="text-xl font-bold">Nice yo see you!</p>
+          <p>Start your journey with us</p>
+        </div>
+        <form className="w-80 flex-col space-y-4" onSubmit={handleSubmit}>
+          <Input type="text" placeholder="Email" onChange={handleEmailChange} />
+          {errors.email && <p className="text-lightRed text-sm">{errors.email}</p>}
 
-            <Input type="text" placeholder="Username" onChange={handleUsernameChange} />
-            {errors.username && <p className="text-lightRed text-sm">{errors.username}</p>}
+          <Input type="text" placeholder="Username" onChange={handleUsernameChange} />
+          {errors.username && <p className="text-lightRed text-sm">{errors.username}</p>}
 
-            <Input type="password" placeholder="Password" onChange={handlePasswordChange} />
-            {errors.password && <p className="text-lightRed text-sm">{errors.password}</p>}
+          <Input type="password" placeholder="Password" onChange={handlePasswordChange} />
+          {errors.password && <p className="text-lightRed text-sm">{errors.password}</p>}
 
-            <Input
-              type="password"
-              placeholder="Confirm password"
-              onChange={handleConfirmPasswordChange}
-            />
-            {errors.confirmPassword && (
-              <p className="text-lightRed text-sm">{errors.confirmPassword}</p>
+          <Input
+            type="password"
+            placeholder="Confirm password"
+            onChange={handleConfirmPasswordChange}
+          />
+          {errors.confirmPassword && (
+            <p className="text-lightRed text-sm">{errors.confirmPassword}</p>
+          )}
+
+          <button
+            className={classNames(
+              'w-full bg-red hover:bg-lightRed px-4 py-2 rounded-md',
+              isDisabled && 'opacity-30'
             )}
-
-            <button
-              className={classNames(
-                'w-full bg-red px-4 py-2 rounded-md',
-                isDisabled && 'opacity-30'
-              )}
-            >
-              Sign up
-            </button>
-          </form>
-          <div className="w-80 text-center">
-            <div onClick={onLoginClick} className="text-center text-sm cursor-pointer">
-              Already have an account? Log in
-            </div>
-            <div className="cursor-pointer" onClick={() => signIn('google')}>
-              Continue with Google
-            </div>
+          >
+            Sign up
+          </button>
+        </form>
+        <div className="w-80 text-center">
+          <div onClick={onLoginClick} className="text-center text-sm cursor-pointer">
+            Already have an account? Log in
           </div>
-        </>
-      ) : (
-        <Verify email={email} />
-      )}
+          <div className="cursor-pointer" onClick={handleSignInWithGoogle}>
+            Continue with Google
+          </div>
+        </div>
+      </>
     </div>
-  )
-}
-
-type ComponentProps = {
-  email: string
-}
-
-const Verify = ({ email }: ComponentProps) => {
-  const [code, setCode] = useState('')
-
-  const onCodeChange = (event: ChangeEvent<HTMLInputElement>) => setCode(event.target.value)
-
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-
-    try {
-      const res = await JWT.verify(email, code)
-
-      if (res.data.isVerified) router.push('/home')
-    } catch (error: any) {
-      console.log(error)
-      console.log(error.response.data.message)
-    }
-  }
-  return (
-    <>
-      <form className="w-80 flex-col space-y-4" onSubmit={handleSubmit}>
-        <p>We sent verification code to {email}</p>
-        <p>Please enter received code here</p>
-        <Input type="text" placeholder="Email" onChange={onCodeChange} />
-        <button className={classNames('w-full bg-red px-4 py-2 rounded-md')}>Confirm</button>
-      </form>
-    </>
   )
 }
 

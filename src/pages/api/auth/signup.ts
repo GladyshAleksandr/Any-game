@@ -2,27 +2,7 @@ import prisma from '@/lib/prisma'
 import Auth from '@/lib/ui/types/Auth'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { hashPassword } from '@/lib/utils/bcrypt/hashPassword'
-import sendgrid from '@sendgrid/mail'
-
-sendgrid.setApiKey(process.env.SENDGRID_API_KEY as string)
-
-async function sendConfirmationEmail(email: string, confirmationCode: string) {
-  const msg = {
-    to: email,
-    from: 'any.game.official10@gmail.com',
-    subject: 'Confirm Your Email Address',
-    text: `Your confirmation code is: ${confirmationCode}`,
-    html: `<p>Your confirmation code is: <strong>${confirmationCode}</strong></p>`
-  }
-
-  try {
-    await sendgrid.send(msg)
-    console.log('Confirmation email sent')
-  } catch (error) {
-    console.error('Error sending confirmation email:', error)
-    throw new Error('Error sending confirmation email')
-  }
-}
+import { compareHashedPassword } from '@/lib/utils/bcrypt/compareHashedPassword'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
@@ -35,10 +15,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     })
 
     if (user) {
-      if (!user.isVerified) {
+      if (!user.password)
+        return res.status(400).json({
+          message:
+            'No password associated with this account, because you signed up via Google. Please sign in via Google'
+        })
+
+      if (
+        !user.isVerified &&
+        username === user.username &&
+        email === user.email &&
+        (await compareHashedPassword(password, user.password!))
+      ) {
         return res
-          .status(400)
-          .json({ message: 'Please verify your email', needToVerifyEmail: true })
+          .status(200)
+          .json({ message: 'Please verify your email', isVerificationRequired: true })
       }
 
       if (user.username === username)
@@ -55,21 +46,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
     })
 
-    const code = Math.floor(100000 + Math.random() * 900000).toString() // 6-digit code
-
-    const verificationCode = await prisma.verificationCode.create({
-      data: {
-        code,
-        userId: createdUser.id,
-        expires: new Date(Date.now() + 24 * 60 * 60 * 1000) // 24 hours from now
-      }
-    })
-
-    await sendConfirmationEmail(email, verificationCode.code)
-
     res.status(200).json({
       message: 'Please verify your email',
-      needToVerifyEmail: true
+      isVerificationRequired: true
     })
   } catch (error) {
     console.error(error)
