@@ -19,6 +19,7 @@ export type Option = {
 export type FilterOptionType = {
   text: string
   isOpen: boolean
+  filterByAllSelectedOptions: boolean
   type: OptionType
   options: Option[]
 }

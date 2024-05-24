@@ -61,6 +61,10 @@ const GamesByFilter = async (req: NextApiRequest & ExtendRequestSession, res: Ne
   const showGamesInGameList = data.find((el) => el.type === OptionType.UserGameStatus)?.isOpen
   const status = data.find((el) => el.type === OptionType.Status)?.isOpen
 
+  const mustHaveAllGenres = genres.some((el) => el.filterByAllSelectedOptions)
+  const mustHaveAllTags = tags.some((el) => el.filterByAllSelectedOptions)
+  const mustHaveAllPlatforms = platforms.some((el) => el.filterByAllSelectedOptions)
+
   try {
     const filteredGames = await prisma.game.findMany({
       where: {
@@ -71,12 +75,10 @@ const GamesByFilter = async (req: NextApiRequest & ExtendRequestSession, res: Ne
               mode: 'insensitive'
             }
           },
+
+          //GENRES
           {
             genres: {
-              some: {
-                slug: includedGenresSlugs.length > 0 ? { in: includedGenresSlugs } : undefined
-              },
-
               every: {
                 NOT: {
                   slug: excludedGenresSlugs.length > 0 ? { in: excludedGenresSlugs } : undefined
@@ -84,13 +86,29 @@ const GamesByFilter = async (req: NextApiRequest & ExtendRequestSession, res: Ne
               }
             }
           },
-
-          {
-            tags: {
-              some: {
-                slug: includedTagsSlugs.length > 0 ? { in: includedTagsSlugs } : undefined
+          mustHaveAllGenres
+            ? {
+                AND: includedGenresSlugs.map((slug) => ({
+                  genres: {
+                    some: {
+                      slug: slug
+                    }
+                  }
+                }))
+              }
+            : {
+                OR: includedGenresSlugs.map((slug) => ({
+                  genres: {
+                    some: {
+                      slug: slug
+                    }
+                  }
+                }))
               },
 
+          // TAGS
+          {
+            tags: {
               every: {
                 NOT: {
                   slug: excludedTagsSlugs.length > 0 ? { in: excludedTagsSlugs } : undefined
@@ -98,13 +116,29 @@ const GamesByFilter = async (req: NextApiRequest & ExtendRequestSession, res: Ne
               }
             }
           },
-
-          {
-            parentPlatforms: {
-              some: {
-                slug: includedPlatformsSlugs.length > 0 ? { in: includedPlatformsSlugs } : undefined
+          mustHaveAllTags
+            ? {
+                AND: includedTagsSlugs.map((slug) => ({
+                  tags: {
+                    some: {
+                      slug: slug
+                    }
+                  }
+                }))
+              }
+            : {
+                OR: includedTagsSlugs.map((slug) => ({
+                  tags: {
+                    some: {
+                      slug: slug
+                    }
+                  }
+                }))
               },
 
+          // PARENT PLATFORMS
+          {
+            parentPlatforms: {
               every: {
                 NOT: {
                   slug:
@@ -113,6 +147,25 @@ const GamesByFilter = async (req: NextApiRequest & ExtendRequestSession, res: Ne
               }
             }
           },
+          mustHaveAllPlatforms
+            ? {
+                AND: includedPlatformsSlugs.map((slug) => ({
+                  parentPlatforms: {
+                    some: {
+                      slug: slug
+                    }
+                  }
+                }))
+              }
+            : {
+                OR: includedPlatformsSlugs.map((slug) => ({
+                  parentPlatforms: {
+                    some: {
+                      slug: slug
+                    }
+                  }
+                }))
+              },
 
           {
             released: releaseYear

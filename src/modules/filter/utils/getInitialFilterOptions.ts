@@ -10,24 +10,28 @@ const getInitialFilterOptions = (
   {
     text: 'Search',
     isOpen: false,
+    filterByAllSelectedOptions: false,
     type: OptionType.Search,
     options: [{ name: '', slug: '', value: null }]
   },
   {
     text: 'Genres',
     isOpen: false,
+    filterByAllSelectedOptions: false,
     type: OptionType.Genres,
     options: genres.map((genre) => ({ name: genre.name, slug: genre.slug, value: null }))
   },
   {
     text: 'Tags',
     isOpen: false,
+    filterByAllSelectedOptions: false,
     type: OptionType.Tags,
     options: tags.map((tag) => ({ name: tag.name, slug: tag.slug, value: null }))
   },
   {
     text: 'Platforms',
     isOpen: false,
+    filterByAllSelectedOptions: false,
     type: OptionType.Platforms,
     options: parentPlatforms.map((platform) => ({
       name: platform.name,
@@ -38,18 +42,21 @@ const getInitialFilterOptions = (
   {
     text: 'Year',
     isOpen: false,
+    filterByAllSelectedOptions: false,
     type: OptionType.ReleaseYear,
     options: [{ name: '', slug: '', value: getSliderData().defaultValue.year }]
   },
   {
     text: 'Rating',
     isOpen: false,
+    filterByAllSelectedOptions: false,
     type: OptionType.Rating,
     options: [{ name: '', slug: '', value: getSliderData().defaultValue.rating }]
   },
   {
     text: 'Adult Rating',
     isOpen: false,
+    filterByAllSelectedOptions: false,
     type: OptionType.AdultRating,
     options: esrbRatings.map((rating) => ({
       name: rating.name,
@@ -60,12 +67,14 @@ const getInitialFilterOptions = (
   {
     text: 'In Game List',
     isOpen: false,
+    filterByAllSelectedOptions: false,
     type: OptionType.UserGameStatus,
     options: [{ name: '', slug: '', value: null }]
   },
   {
     text: 'Announced',
     isOpen: false,
+    filterByAllSelectedOptions: false,
     type: OptionType.Status,
     options: [{ name: '', slug: '', value: null }]
   }

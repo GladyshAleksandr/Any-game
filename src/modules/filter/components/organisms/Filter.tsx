@@ -38,6 +38,16 @@ const Filter = ({
     )
   }
 
+  const handleFilterbyAllSelectedOptions = (type: OptionType) => {
+    setFilterOptions((prevState) =>
+      prevState.map((option) =>
+        option.type === type
+          ? { ...option, filterByAllSelectedOptions: !option.filterByAllSelectedOptions }
+          : option
+      )
+    )
+  }
+
   const handleToggleCheckBox = (type: OptionType, slug: string) => {
     setFilterOptions((prevState) =>
       prevState.map((option) =>
@@ -98,7 +108,7 @@ const Filter = ({
     )
   }
 
-  const hanleSubmit = async () => {
+  const handleSubmit = async () => {
     const optionsToSend = filterOptions
       .filter((option) =>
         !isSimpleCheckBox(option.type) ? option.options.some((el) => el.value !== null) : true
@@ -106,9 +116,9 @@ const Filter = ({
       .map((option) => ({
         type: option.type,
         isOpen: option.isOpen,
+        filterByAllSelectedOptions: option.filterByAllSelectedOptions,
         options: option.options.filter((el) => el.value !== null)
       }))
-
     const res = await FilterAPI.filter(optionsToSend)
     setFilteredGames(res.data.filteredGames)
   }
@@ -125,9 +135,11 @@ const Filter = ({
             key={el.text}
             text={el.text}
             isOpen={el.isOpen}
+            filterByAllSelectedOptions={el.filterByAllSelectedOptions}
             type={el.type}
             options={el.options}
             handleToggleOption={handleToggleOption}
+            handleFilterbyAllSelectedOptions={handleFilterbyAllSelectedOptions}
             handleToggleCheckBox={handleToggleCheckBox}
             handleSearchField={handleSearchField}
             handleSlider={handleSlider}
@@ -136,7 +148,7 @@ const Filter = ({
       </div>
       <div
         className="w-1/3 h-1/2 p-3 font-bold bg-darkGold rounded-xl text-center cursor-pointer"
-        onClick={hanleSubmit}
+        onClick={handleSubmit}
       >
         Search
       </div>

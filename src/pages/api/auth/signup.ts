@@ -15,14 +15,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     })
 
     if (user) {
-      if (!user.password)
-        return res.status(400).json({
-          message:
-            'No password associated with this account, because you signed up via Google. Please sign in via Google'
-        })
-
       if (
         !user.isVerified &&
+        user.password &&
         username === user.username &&
         email === user.email &&
         (await compareHashedPassword(password, user.password!))
@@ -34,7 +29,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       if (user.username === username)
         return res.status(400).json({ message: 'Username already taken' })
-      return res.status(400).json({ message: 'Email already taken' })
+      if (user.email === email) return res.status(400).json({ message: 'Email already taken' })
+
+      if (!user.password)
+        return res.status(400).json({
+          message:
+            'No password associated with this account, because you signed up via Google. Please sign in via Google'
+        })
     }
 
     const hashedPassword = await hashPassword(password)

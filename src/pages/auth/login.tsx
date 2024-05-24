@@ -31,7 +31,7 @@ const Login = () => {
       router.push('/home')
     } catch (error: any) {
       console.log(error)
-      triggerNotification('', error.response.data.message, NotificationType.Success, 5000)
+      triggerNotification('', error.response.data.message, NotificationType.Error, 5000)
     }
   }
 

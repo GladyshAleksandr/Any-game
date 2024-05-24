@@ -8,6 +8,7 @@ import CheckboxMinus from '@icons/CheckboxMinus.svg'
 
 type ComponentProps = {
   handleToggleOption: (type?: OptionType) => void
+  handleFilterbyAllSelectedOptions: (type: OptionType) => void
   handleToggleCheckBox: (type: OptionType, slug: string) => void
   handleSearchField: (type: OptionType, value: string) => void
   handleSlider: (type: OptionType, value: [number, number]) => void
@@ -16,9 +17,11 @@ type ComponentProps = {
 const FilterOption = ({
   text,
   isOpen,
+  filterByAllSelectedOptions,
   type,
   options,
   handleToggleOption,
+  handleFilterbyAllSelectedOptions,
   handleToggleCheckBox,
   handleSearchField,
   handleSlider
@@ -56,9 +59,11 @@ const FilterOption = ({
           {isOpen && (
             <FilterSubOptions
               isOpen={isOpen}
+              filterByAllSelectedOptions={filterByAllSelectedOptions}
               type={type}
               options={options}
               handleToggleOption={handleToggleOption}
+              handleFilterbyAllSelectedOptions={handleFilterbyAllSelectedOptions}
               handleToggleCheckBox={handleToggleCheckBox}
               handleSlider={handleSlider}
             />

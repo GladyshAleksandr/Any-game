@@ -49,7 +49,7 @@ const SignUp = () => {
         router.push(`verify?email=${email}`)
       }
     } catch (error: any) {
-      triggerNotification('', error.response.data.message, NotificationType.Success, 5000)
+      triggerNotification('', error.response.data.message, NotificationType.Error, 5000)
       console.log(error)
     }
   }
